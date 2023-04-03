@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Takuzu</title>
-    <meta name="description" content="Implémentation JS du jeu de réflexion Takuzu, ou Binairo.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Takuzu</title>
+  <meta name="description" content="Implémentation JS du jeu de réflexion Takuzu, ou Binairo." />
+
+  <!-- <link rel="stylesheet" href="./src/styles/reset.css" />
+  <link rel="stylesheet" href="./src/styles/globals.css" /> -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
-    <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
-    
-    <!-- Là où on va faire le rendu de l'interface. -->
-    <div id="root"></div>
-    
-    <!-- On importe le script principal pour exécuter le jeu. -->
-    <script type="module" src="./src/index.js"></script>
+<body class="flex flex-col gap-6 items-center justify-center min-h-screen h-full">
+  <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
+  <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
+  
+  <!-- Là où on va faire le rendu de l'interface. -->
+  <div id="game-root"></div>
+  
+  <!-- On importe le script principal pour exécuter le jeu. -->
+  <script type="module" src="./src/index.js"></script>
 </body>
 </html>

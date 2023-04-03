@@ -1,6 +1,4 @@
-import Takuzu from "./takuzu/index.js";
-const grid = new Takuzu(4);
-grid.generate();
-grid.prepare();
+import { createGame, game_root } from "./render/game.js";
 
-console.log(grid.task);
+game_root.appendChild(createGame());
+
