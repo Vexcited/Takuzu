@@ -24,7 +24,6 @@ const splitGridIntoTiles = (grid) => {
 
     splitted_grid.push(splitted_row);
   }
-  debugger;
 
   return splitted_grid;
 }
@@ -51,8 +50,6 @@ export const generateGrid = (size) => {
       
       index = getRandomNumber(filtered_rows.length - 1);
       row = filtered_rows[index];
-
-      debugger
 
       if (!row) return null; // Dead end random (5-10% chance)
       index = rows.indexOf(row);

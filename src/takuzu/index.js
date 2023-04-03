@@ -42,7 +42,6 @@ class Takuzu {
 
     while (!grid || (check_result && check_result.error)) {
       grid = generateGrid(this.size);
-      debugger;
       if (grid) check_result = checkFullGrid(grid);
     }
 
@@ -61,7 +60,7 @@ class Takuzu {
    * @public
    * @param {number} row
    * @param {number} column
-   * @param {import("./constants").TileValues} value - `null` signifie que la case est vide.
+   * @param {import("./constants").TileValues} value
    */
   change = (row, column, value) => {
     if (row >= this.size || row < 0) throw new Error(OUT_OF_RANGE("row"));

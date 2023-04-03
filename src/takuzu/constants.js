@@ -23,5 +23,5 @@ export const OUT_OF_RANGE = (line) =>
 export const TileValues = /** @type {const} */ ({
   "ZERO": "0",
   "ONE": "1",
-  "EMPTY": null
+  "EMPTY": "."
 });
