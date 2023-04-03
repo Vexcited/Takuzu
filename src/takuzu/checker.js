@@ -42,19 +42,19 @@ export const checkFullGrid = (grid) => {
   // On vérifie la règle 1 et 2 sur les colonnes.
   for (let i = 0; i < columns.length; i++) {
     const isNotTripled = checkNotTriple(columns[i]);
-    if (!isNotTripled) return createCheckerError("triple", ERRORS.RIPLE_ERROR, [`col-${i}`]);
+    if (!isNotTripled) return createCheckerError("triple", ERRORS.TRIPLE, [`col-${i}`]);
     
     const isBalanced = checkBalance(columns[i]);
-    if (!isBalanced) return createCheckerError("balance", ERRORS.BALANCE_ERROR, [`col-${i}`]);
+    if (!isBalanced) return createCheckerError("balance", ERRORS.BALANCE, [`col-${i}`]);
   }
 
   // On vérifie la règle 1 et 2 sur les rangées.
   for (let i = 0; i < rows.length; i++) {
     const isNotTripled = checkNotTriple(rows[i]);
-    if (!isNotTripled) return createCheckerError("triple", ERRORS.TRIPLE_ERROR, [`row-${i}`]);
+    if (!isNotTripled) return createCheckerError("triple", ERRORS.TRIPLE, [`row-${i}`]);
 
     const isBalanced = checkBalance(rows[i]);
-    if (!isBalanced) return createCheckerError("balance", ERRORS.BALANCE_ERROR, [`row-${i}`]);
+    if (!isBalanced) return createCheckerError("balance", ERRORS.BALANCE, [`row-${i}`]);
   }
 
   // Aucune erreur !
