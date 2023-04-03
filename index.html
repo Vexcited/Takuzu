@@ -15,8 +15,37 @@
   <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
   <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
   
+  <div id="__route_/" class="flex flex-col items-center">
+    <h1 class="font-medium text-3xl">
+      Takuzu
+    </h1>
+    <p class="font-normal text-md">
+      Sélectionnez une taille de grille.
+    </p>
+
+    <div class="flex gap-2 mt-4">
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="4">
+        4x4
+      </button>
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="6">
+        6x6
+      </button>
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="10">
+        10x10
+      </button>
+    </div>
+
+    <!-- <label>
+      Difficulté entre 0.2 (Facile) et 1.0 (Très dur)
+      <input type="range" min="0.2" max="1" step="0.01" value="0.2" />
+    </label> -->
+  </div>
+
   <!-- Là où on va faire le rendu de l'interface. -->
-  <div id="game-root"></div>
+  <div class="hidden flex flex-col gap-4" id="__route_/game">
+    <!-- <h2>we playin</h2> -->
+    <div id="__/game_board" class=""></div>
+  </div>
   
   <!-- On importe le script principal pour exécuter le jeu. -->
   <script type="module" src="./src/index.js"></script>

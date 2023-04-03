@@ -2,15 +2,12 @@ import Takuzu from "../takuzu/index.js";
 import { TileValues } from "../takuzu/constants.js";
 
 /** @type {HTMLDivElement} */
-export const game_root = document.getElementById("game-root");
+const game_board = document.getElementById("__/game_board");
 
-// Shared variables.
 /** @type {Takuzu | null} */
 let grid = null;
-/** @type {number} */
-let size = 6;
 
-const cleanGameRoot = () => game_root.innerHTML = "";
+const cleanGameRoot = () => game_board.innerHTML = "";
 
 /**
  * @param {keyof HTMLElementTagNameMap} tagName 
@@ -26,12 +23,13 @@ const createElement = (tagName, attributes = {}) => {
   return element;
 }; 
 
-export const createGame = () => {
+/** @param {number} size */
+export const createGame = (size) => {
   cleanGameRoot();
 
   grid = new Takuzu(size);
   grid.generate();
-  grid.prepare(0.8);
+  grid.prepare(0.2);
 
   const mainGrid = createElement("div", {
     class: "flex flex-col gap-1"
@@ -83,5 +81,5 @@ export const createGame = () => {
     mainGrid.appendChild(columnElement);
   }
 
-  return mainGrid
+  game_board.appendChild(mainGrid);
 }
