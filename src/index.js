@@ -1,4 +1,4 @@
-import { createGame } from "./render/game.js";
+import { createGame, destroyGame } from "./render/game.js";
 import { selectActiveRoute } from "./render/routes.js";
 
 // On récupère les boutons qui permettent de démarrer une partie de Takuzu.
@@ -15,3 +15,15 @@ startGameButtons.forEach(
     }
   }
 );
+
+document.getElementById("__/game_action_back_home1")
+  .onclick = () => {
+    selectActiveRoute("/");
+    destroyGame();
+  }
+
+document.getElementById("__/game_action_back_home2")
+  .onclick = () => {
+    selectActiveRoute("/");
+    destroyGame();
+  }

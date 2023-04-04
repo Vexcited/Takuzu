@@ -24,6 +24,9 @@
     </p>
 
     <div class="flex gap-2 mt-4">
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="2">
+        2x2
+      </button>
       <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="4">
         4x4
       </button>
@@ -42,9 +45,19 @@
   </div>
 
   <!-- Là où on va faire le rendu de l'interface. -->
-  <div class="hidden flex flex-col gap-4" id="__route_/game">
-    <!-- <h2>we playin</h2> -->
+  <div class="hidden flex flex-col items-center gap-4" id="__route_/game">
+    <h2 id="__/game_timer">00:00:00</h2>
     <div id="__/game_board" class=""></div>
+
+    <p id="__/game_hint" class="mt-4"></p>
+
+    <div class="mt-6">
+      <button class="__game_actions_ingame bg-black text-white px-4 py-2 border border-black" type="button" id="__/game_action_back_home1">Quitter</button>
+      <button class="__game_actions_ingame bg-white text-black px-4 py-2 border border-black hover:bg-black hover:text-white" type="button">Reset</button>
+
+      <button class="__game_actions_finish hidden bg-black text-white px-4 py-2 border border-black" type="button" id="__/game_action_back_home2">Revenir au menu</button>
+      <button class="__game_actions_finish hidden bg-white text-black px-4 py-2 border border-black hover:bg-black hover:text-white" type="button">Nouvelle grille</button>
+    </div>
   </div>
   
   <!-- On importe le script principal pour exécuter le jeu. -->
