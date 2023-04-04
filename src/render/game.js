@@ -51,7 +51,7 @@ export const createGame = (size) => {
       
       const rowItemElement = createElement("button", {
         type: "button",
-        class: "flex items-center justify-center h-8 w-8 text-black border border-black bg-white disabled:bg-black disabled:text-white",
+        class: "__game_grid_button flex items-center justify-center h-8 w-8 text-black border border-black bg-white disabled:bg-black disabled:text-white",
         "data-row-index": rowItemIndex.toString(),
         "data-column-index": columnIndex.toString(), 
       });
@@ -79,6 +79,13 @@ export const createGame = (size) => {
         else {
           clearInterval(__timer);
           game_hints.innerText = "Vous avez terminé!";
+
+          
+          document.querySelectorAll(".__game_grid_button").forEach(
+            button => {
+              button.onclick = () => null
+            }
+          );
 
           document.querySelectorAll(".__game_actions_ingame").forEach(
             button => {
