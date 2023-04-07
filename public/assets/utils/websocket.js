@@ -16,10 +16,8 @@ export class Connection {
     
     setInterval(() => {
       if (!this.id) return;
-  
-      console.log("send ping");
       this.send("ping:" + this.id);
-    }, 2_000);
+    }, 5_000);
   }
 
   send = (data) => this.ws.send(data)

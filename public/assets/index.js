@@ -47,4 +47,5 @@ document.getElementById("__/game_action_back_reset2")
   };
 
 
-const ws = new Connection
+const ws = new Connection();
+console.log("[server] created connection to ws:/api", ws);

@@ -22,9 +22,18 @@ app.ws("/api", (ws) => {
     let [command, ...data] = msg.split(":");
     data = data.join(":");
 
-    console.log(command, data, users);
+    switch (command) {
+      case "ping": {
+        const user_id = data;
+        const user = users[user_id];
+        if (!user) break;
+
+        user.lastPingTime = new Date();
+        break;
+      }
+    }
   });
 })
 
 
-app.listen(8080, () => console.log("start: server"));
+app.listen(8080, () => console.log("started."));
