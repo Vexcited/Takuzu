@@ -12,7 +12,7 @@ Chaque grille ne contient que des éléments d’une paire quelconque - le cas l
 
 - autant de 1 que de 0 sur chaque ligne et sur chaque colonne ;
 - pas plus de 2 chiffres identiques côte à côte ;
-- (règle de non-duplication, optionel) 2 lignes ou 2 colonnes ne peuvent être identiques.
+- (règle de non-duplication) 2 lignes ou 2 colonnes ne peuvent être identiques.
 
 ## Notre implémentation
 

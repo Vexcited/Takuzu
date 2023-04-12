@@ -33,17 +33,17 @@ export const createGame = (size) => {
 
   grid = new Takuzu(size);
   grid.generate();
-  grid.prepare(0.2);
+  grid.prepare(0.33);
 
   const mainGrid = createElement("div", {
-    class: "flex flex-col gap-1"
+    class: "flex flex-col gap-1 aspect-square w-full h-[75vh]"
   });
 
   for (let columnIndex = 0; columnIndex < grid.task.length; columnIndex++) {
     const column = grid.task[columnIndex];
 
     const columnElement = createElement("div", {
-      class: "flex flex-row gap-1"
+      class: "flex flex-row gap-1 w-auto h-full"
     });
 
     for (let rowItemIndex = 0; rowItemIndex < column.length; rowItemIndex++) {
@@ -51,7 +51,7 @@ export const createGame = (size) => {
       
       const rowItemElement = createElement("button", {
         type: "button",
-        class: "__game_grid_button flex items-center justify-center h-8 w-8 text-black border border-black bg-white disabled:bg-black disabled:text-white",
+        class: "__game_grid_ button flex items-center justify-center aspect-square w-full h-full text-black border border-black bg-white disabled:bg-black disabled:text-white",
         "data-row-index": rowItemIndex.toString(),
         "data-column-index": columnIndex.toString(), 
       });
@@ -79,7 +79,6 @@ export const createGame = (size) => {
         else {
           clearInterval(__timer);
           game_hints.innerText = "Vous avez terminé!";
-
           
           document.querySelectorAll(".__game_grid_button").forEach(
             button => {
@@ -98,14 +97,13 @@ export const createGame = (size) => {
               button.classList.remove("hidden");
             }
           );
-
         }
-      }
+      };
 
       rowItemElement.onclick = (event) => {
         event.preventDefault();
         updateContent();
-      }
+      };
 
       columnElement.appendChild(rowItemElement);
     }

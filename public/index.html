@@ -15,27 +15,34 @@
   <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
   <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
   
-  <div id="__route_/" class="flex flex-col items-center">
+  <div id="__route_/" class="flex flex-col items-center gap-2">
     <h1 class="font-medium text-3xl">
       Takuzu
     </h1>
+
     <p class="font-normal text-md">
       Sélectionnez une taille de grille.
     </p>
 
-    <div class="flex gap-2 mt-4">
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="2">
+    <div class="flex gap-4 mt-4">
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="2">
         2x2
       </button>
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="4">
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="4">
         4x4
       </button>
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="6">
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="6">
         6x6
       </button>
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2" data-size="10">
+      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="10">
         10x10
       </button>
+    </div>
+
+    <div class="flex flex-col gap-2 mt-4 text-center">
+      <p>- Autant de 1 que de 0 sur chaque ligne et sur chaque colonne </p>
+      <p>- Pas plus de 2 chiffres identiques côte à côte </p>
+      <p>- 2 lignes ou 2 colonnes ne peuvent être identiques (règle de non-duplication)</p>
     </div>
 
     <!-- <label>
@@ -45,9 +52,9 @@
   </div>
 
   <!-- Là où on va faire le rendu de l'interface. -->
-  <div class="hidden flex flex-col items-center gap-4" id="__route_/game">
+  <div class="hidden flex flex-col items-center gap-4 w-full min-h-screen h-full p-8" id="__route_/game">
     <h2 id="__/game_timer">00:00:00</h2>
-    <div id="__/game_board" class=""></div>
+    <div id="__/game_board" class="w-full"></div>
 
     <p id="__/game_hint" class="mt-4"></p>
 
