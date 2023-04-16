@@ -1,14 +1,24 @@
 {
   "name": "takuzu",
   "version": "1.0.0",
-  "description": "",
+  "description": "Implémentation JS du jeu de réflexion Takuzu, ou Binairo.",
   "main": "./src/index.js",
   "scripts": {
     "start": "node ./src/index.js",
     "dev": "nodemon ./src/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "takuzu",
+    "binairo"
+  ],
+  "author": {
+    "name": "Mikkel RINGAUD",
+    "email": "mikkel@milescode.dev",
+    "url": "https://github.com/Vexcited"
+  },
+  "contributors": [
+    { "name": "Mélissa LASPOUGEAS" }
+  ],
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
