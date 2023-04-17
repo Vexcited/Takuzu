@@ -9,18 +9,21 @@ class Takuzu {
   }
 
   /**
+   * La taille de la grille générée.
    * @readonly
    * @type {number}
    */
   size;
   
   /**
-   * @private
+   * La grille générée, complète.
+   * @public
    * @type {string[][]}
    */
   grid;
 
   /**
+   * L'état actuel de la grille, sur laquelle on va jouer.
    * @public
    * @type {string[][]}
    */

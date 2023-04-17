@@ -132,7 +132,6 @@ export const createGame = (size) => {
 
         if (check.error) {
           let isFull = true;
-          // TODO: Vérifier que la grille est complète avant.
           for (const row of grid.task) {
             for (const column_item of row) {
               if (column_item === TileValues.EMPTY) {

@@ -153,8 +153,6 @@ const filteringRows = (rows, pattern) => {
   return filtered_rows;
 }
 
-
-
 /**
  * @param {string[][]} grid 
  * @param {number} fillFactor - Un facteur qui défini à combien de % la grille sera remplie. 
@@ -176,6 +174,19 @@ export const prepareGrid = (grid, fillFactor) => {
 
     prepared_grid.push(prepared_row);
   }
+
+  let isEmpty = true;
+  for (const row of prepared_grid) {
+    for (const column_item of row) {
+      if (column_item !== TileValues.EMPTY) {
+        isEmpty = false;
+        break;
+      }
+    }
+  }
+
+  // Prépare une autre grille si elle est entièrement vide.
+  if (isEmpty) return prepareGrid(grid, fillFactor);
 
   return prepared_grid;
 };
