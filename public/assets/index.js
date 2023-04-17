@@ -40,6 +40,9 @@ document.getElementById("__/game_action_back_reset")
     createGame(__size);
   };
 
+export const ws = new Connection();
+console.log("[server] created connection to ws:/api", ws);
+
 /** @type {HTMLButtonElement} */
 const startTakuzuOnlineButton = document.querySelector(".__start-takuzu-online")
 startTakuzuOnlineButton.onclick = () => {
@@ -53,5 +56,3 @@ document.getElementById("__/online_action_back_home")
     selectActiveRoute("/");
   }
 
-const ws = new Connection();
-console.log("[server] created connection to ws:/api", ws);
