@@ -33,7 +33,7 @@ app.ws("/api", (ws) => {
       }
     }
   });
-})
+});
 
 
 app.listen(8080, () => console.log("started."));

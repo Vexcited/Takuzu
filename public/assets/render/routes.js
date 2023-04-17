@@ -1,6 +1,7 @@
 export const ROUTES_ID = {
   "/": "__route_/",
-  "/game": "__route_/game"
+  "/game": "__route_/game",
+  "/online": "__route_/online"
 };
 
 /**

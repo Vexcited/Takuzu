@@ -23,3 +23,5 @@ export const arrayFromLength = (length) => {
 };
 
 export const getRandomBoolean = (chance = 0.5) => chance > Math.random();
+
+export const classNames = (...classes) => classes.join(" ");

@@ -1,5 +1,6 @@
 import Takuzu from "../takuzu/index.js";
 import { TileValues } from "../takuzu/constants.js";
+import { classNames } from "../utils/helpers.js";
 
 /** @type {HTMLDivElement} */
 const game_board = document.getElementById("__/game_board");
@@ -27,6 +28,52 @@ const createElement = (tagName, attributes = {}) => {
   return element;
 };
 
+const createZeroSVG = (gradientInside = false) => {
+  if (gradientInside) return `
+    <svg width="100%" height="100%" viewBox="0 0 75 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 119L75 119V1.20005e-05L1.04033e-05 0L0 119ZM25 25L25 94H50L50 25H25Z" fill="url(#paint0_linear_12_10)"/>
+      <defs>
+        <linearGradient id="paint0_linear_12_10" x1="37.5" y1="0" x2="37.5" y2="119" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#8839EF"/>
+          <stop offset="1" stop-color="#7287FD"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  `;
+
+  return `
+    <svg width="100%" height="100%" viewBox="0 0 75 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 119L75 119V-3.25826e-06L1.04033e-05 -1.52588e-05L0 119ZM25 25L25 94H50L50 25H25Z" fill="#EFF1F5"/>
+    </svg>
+  `;
+};
+
+const createOneSVG = (gradientInside = false) => {
+  if (gradientInside) return `
+    <svg width="100%" height="100%" viewBox="0 0 50 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M25 0L50 0V119H25L25 25H0L0 0L25 0Z" fill="url(#paint0_linear_12_9)"/>
+      <defs>
+        <linearGradient id="paint0_linear_12_9" x1="25" y1="0" x2="25" y2="119" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#8839EF"/>
+          <stop offset="1" stop-color="#7287FD"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  `;
+
+  return `
+    <svg width="100%" height="100%" viewBox="0 0 50 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M25 0L50 0V119H25L25 25H0L0 0L25 0Z" fill="#EFF1F5"/>
+    </svg>
+  `;
+};
+
+/** @param {"0" | "1"} value */
+const createButtonContentFrom = (value, gradientInside = false) => {
+  if (value === "0") return createZeroSVG(gradientInside);
+  else if (value === "1") return createOneSVG(gradientInside);
+} 
+
 /** @param {number} size */
 export const createGame = (size) => {
   cleanGameRoot();
@@ -36,14 +83,14 @@ export const createGame = (size) => {
   grid.prepare(0.33);
 
   const mainGrid = createElement("div", {
-    class: "flex flex-col gap-1 aspect-square w-full h-[75vh]"
+    class: "flex flex-col items-center justify-center gap-1 w-full h-[75vh]"
   });
 
   for (let columnIndex = 0; columnIndex < grid.task.length; columnIndex++) {
     const column = grid.task[columnIndex];
 
     const columnElement = createElement("div", {
-      class: "flex flex-row gap-1 w-auto h-full"
+      class: "flex flex-row gap-1 w-full h-auto justify-center"
     });
 
     for (let rowItemIndex = 0; rowItemIndex < column.length; rowItemIndex++) {
@@ -51,30 +98,56 @@ export const createGame = (size) => {
       
       const rowItemElement = createElement("button", {
         type: "button",
-        class: "__game_grid_ button flex items-center justify-center aspect-square w-full h-full text-black border border-black bg-white disabled:bg-black disabled:text-white",
+        class: classNames(
+          "__game_grid_",
+           "button flex items-center justify-center aspect-square max-w-[64px] max-h-[64px] min-w-[24px] min-h-[24px] w-full h-full p-2",
+           "border-4 border-[#4C4F69]",
+           "bg-[#EFF1F5] disabled:bg-gradient-to-t disabled:from-[#7287FD] disabled:to-[#8839EF]"
+        ),
+
         "data-row-index": rowItemIndex.toString(),
         "data-column-index": columnIndex.toString(), 
+        "data-value": row
       });
 
       if (row !== TileValues.EMPTY) {
         rowItemElement.setAttribute("disabled", true);
       }
 
-      rowItemElement.innerText = row === TileValues.EMPTY ? "" : row;
+      rowItemElement.innerHTML = row === TileValues.EMPTY ? "" : createButtonContentFrom(row);
 
       const updateContent = () => {
-        let new_value = rowItemElement.innerText === "" ? TileValues.EMPTY : rowItemElement.innerText;
+        let new_value = rowItemElement.dataset.value;
         
+        // TODO: Optimiser plus tard.
         if (new_value === TileValues.EMPTY) new_value = TileValues.ZERO;
         else if (new_value === TileValues.ZERO) new_value = TileValues.ONE;
-        else if (new_value === TileValues.ONE) new_value = TileValues.EMPTY;
+        else if (new_value === TileValues.ONE) new_value = TileValues.ZERO;
 
         grid.change(columnIndex, rowItemIndex, new_value);
+        rowItemElement.innerHTML = new_value === TileValues.EMPTY ? "" : createButtonContentFrom(new_value, true);
+        rowItemElement.dataset.value = new_value;
+
         const check = grid.check();
-        rowItemElement.innerText = new_value === TileValues.EMPTY ? "" : new_value;
 
         if (check.error) {
-          game_hints.innerText = grid.check().message;
+          let isFull = true;
+          // TODO: Vérifier que la grille est complète avant.
+          for (const row of grid.task) {
+            for (const column_item of row) {
+              if (column_item === TileValues.EMPTY) {
+                isFull = false;
+                break;
+              }
+            }
+          }
+
+          if (!isFull) {
+            game_hints.innerText = "";
+            return;
+          }
+
+          game_hints.innerText = check.message;
         } 
         else {
           clearInterval(__timer);
@@ -100,10 +173,26 @@ export const createGame = (size) => {
         }
       };
 
+      const removeContent = () => {
+        grid.change(columnIndex, rowItemIndex, TileValues.EMPTY);
+        rowItemElement.dataset.value = TileValues.EMPTY;
+        rowItemElement.innerHTML = "";
+      }
+
       rowItemElement.onclick = (event) => {
         event.preventDefault();
-        updateContent();
+
+        // Clique-gauche.
+        if (event.button === 0) updateContent();
+        // Clique-droit.
+        else if (event.button === 2) removeContent();
       };
+
+      // Clique-droit.
+      rowItemElement.oncontextmenu = (event) => {
+        event.preventDefault();
+        removeContent();
+      }
 
       columnElement.appendChild(rowItemElement);
     }

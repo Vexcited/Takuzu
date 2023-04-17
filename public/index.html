@@ -7,65 +7,98 @@
   <title>Takuzu</title>
   <meta name="description" content="Implémentation JS du jeu de réflexion Takuzu, ou Binairo." />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+
   <!-- <link rel="stylesheet" href="./src/styles/reset.css" />
   <link rel="stylesheet" href="./src/styles/globals.css" /> -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ["Jost", "sans-serif"]
+        }
+      }
+    }
+  </script>
 </head>
-<body class="flex flex-col gap-6 items-center justify-center min-h-screen h-full">
+<body class="flex flex-col gap-6 items-center justify-center min-h-screen h-full bg-[#EFF1F5] text-[#4C4F69]">
   <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
   <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
   
-  <div id="__route_/" class="flex flex-col items-center gap-2">
+  <section id="__route_/" class="flex flex-col items-center gap-2">
     <h1 class="font-medium text-3xl">
       Takuzu
     </h1>
 
     <p class="font-normal text-md">
-      Sélectionnez une taille de grille.
+      Implémentation du jeu de réflexion <a class="font-medium hover:underline" target="_blank" href="https://fr.wikipedia.org/wiki/Takuzu">Takuzu, aussi connu sous le nom de Binairo</a>
     </p>
 
-    <div class="flex gap-4 mt-4">
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="2">
-        2x2
-      </button>
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="4">
-        4x4
-      </button>
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="6">
-        6x6
-      </button>
-      <button type="button" class="__start-takuzu border border-black text-black hover:bg-black hover:text-white px-4 py-2 hover:scale-105 transition-[transform]" data-size="10">
-        10x10
+    <div class="flex flex-col gap-2">
+      <div class="flex gap-4 mt-4">
+        <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="4">
+          4x4
+        </button>
+        <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="6">
+          6x6
+        </button>
+        <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="8">
+          8x8
+        </button>
+        <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="10">
+          10x10
+        </button>
+      </div>
+
+      <hr class="border-[#4C4F69] opacity-50" />
+  
+      <button type="button" class="__start-takuzu-online border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
+        Jouer en ligne
       </button>
     </div>
 
-    <div class="flex flex-col gap-2 mt-4 text-center">
-      <p>- Autant de 1 que de 0 sur chaque ligne et sur chaque colonne </p>
-      <p>- Pas plus de 2 chiffres identiques côte à côte </p>
-      <p>- 2 lignes ou 2 colonnes ne peuvent être identiques (règle de non-duplication)</p>
+
+    <div class="flex flex-col gap-2 mt-4 p-2 border-[#EFF1F5] text-center">
+      <h2 class="font-medium text-xl">Règles</h2>
+
+      <p>- Autant de 1 que de 0 sur chaque ligne et sur chaque colonne.</p>
+      <p>- 2 lignes ou 2 colonnes ne peuvent être identiques.</p>
+      <p>- Pas plus de 2 tuiles identiques côte à côte.</p>
     </div>
 
     <!-- <label>
       Difficulté entre 0.2 (Facile) et 1.0 (Très dur)
       <input type="range" min="0.2" max="1" step="0.01" value="0.2" />
     </label> -->
-  </div>
+  </section>
 
   <!-- Là où on va faire le rendu de l'interface. -->
-  <div class="hidden flex flex-col items-center gap-4 w-full min-h-screen h-full p-8" id="__route_/game">
-    <h2 id="__/game_timer">00:00:00</h2>
+  <section class="hidden flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8" id="__route_/game">
+    <h2 id="__/game_timer" class="font-medium text-xl">00:00:00</h2>
     <div id="__/game_board" class="w-full"></div>
 
-    <p id="__/game_hint" class="mt-4"></p>
-
-    <div class="mt-6">
-      <button class="__game_actions_ingame bg-black text-white px-4 py-2 border border-black" type="button" id="__/game_action_back_home1">Quitter</button>
-      <button class="__game_actions_ingame bg-white text-black px-4 py-2 border border-black hover:bg-black hover:text-white" id="__/game_action_back_reset1" type="button">Reset</button>
-
-      <button class="__game_actions_finish hidden bg-black text-white px-4 py-2 border border-black" type="button" id="__/game_action_back_home2">Revenir au menu</button>
-      <button class="__game_actions_finish hidden bg-white text-black px-4 py-2 border border-black hover:bg-black hover:text-white" id="__/game_action_back_reset2" type="button">Nouvelle grille</button>
+    <div class="flex flex-col gap-3 items-center justify-center">
+      <p id="__/game_hint"></p>
+      
+      <div class="flex gap-2 flex-col-reverse sm:flex-row items-center justify-center">
+        <button class="__game_actions_ingame bg-[#4C4F69] text-[#EFF1F5] px-4 py-2 border border-[#4C4F69]" type="button" id="__/game_action_back_home1">Quitter</button>
+        <button class="__game_actions_finish hidden bg-[#4C4F69] text-[#EFF1F5] px-4 py-2 border border-[#4C4F69]" type="button" id="__/game_action_back_home2">Revenir au menu</button>
+        <button class="bg-[#EFF1F5] text-[#4C4F69] px-4 py-2 border border-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5]" id="__/game_action_back_reset" type="button">Nouvelle grille</button>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <section class="hidden flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8" id="__route_/online">
+    <h1 class="text-3xl font-medium">
+      Takuzu en ligne
+    </h1>
+    <button type="button" id="__/online_action_back_home" class="border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
+      Revenir à la page d'accueil
+    </button>
+  </section>
   
   <!-- On importe le script principal pour exécuter le jeu. -->
   <script type="module" src="./assets/index.js"></script>

@@ -34,18 +34,24 @@ document.getElementById("__/game_action_back_home2")
     __size = 0;
   };
 
-document.getElementById("__/game_action_back_reset1")
+document.getElementById("__/game_action_back_reset")
   .onclick = () => {
     destroyGame();
     createGame(__size);
   };
 
-document.getElementById("__/game_action_back_reset2")
-  .onclick = () => {
-    destroyGame();
-    createGame(__size);
-  };
+/** @type {HTMLButtonElement} */
+const startTakuzuOnlineButton = document.querySelector(".__start-takuzu-online")
+startTakuzuOnlineButton.onclick = () => {
+  // On change l'interface.
+  selectActiveRoute("/online");
+}
 
+document.getElementById("__/online_action_back_home")
+  .onclick = () => {
+    // On change l'interface.
+    selectActiveRoute("/");
+  }
 
 const ws = new Connection();
 console.log("[server] created connection to ws:/api", ws);
