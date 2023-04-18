@@ -6,6 +6,8 @@ import expressWs from "express-ws";
 
 import { users, createUser, getConnectedUsers, getConnectedUser } from "./stores.js";
 
+import Takuzu from "../public/assets/takuzu/index.js";
+
 // Source: <https://flaviocopes.com/fix-dirname-not-defined-es-module-scope/>
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

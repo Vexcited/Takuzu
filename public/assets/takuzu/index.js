@@ -1,4 +1,6 @@
-import { ERRORS, OUT_OF_RANGE } from "./constants.js";
+// @ts-check
+
+import { OUT_OF_RANGE } from "./constants.js";
 import { generateGrid, prepareGrid } from "./generator.js";
 import { checkFullGrid } from "./checker.js";
 
@@ -35,7 +37,11 @@ class Takuzu {
    */
   cache = [];
 
-  /** @public */
+  /**
+   * Génère une grille de jeu.
+   * 
+   * @public
+   */
   generate () {
     /** @type {string[][] | null | undefined} */
     let grid;
@@ -49,15 +55,28 @@ class Takuzu {
     }
 
     this.grid = grid;
+    return grid;
   }
 
-  /** @public */
+  /**
+   * Prépare la grille à être jouable
+   * en inserant des trous dans la grille, en fonction de `fillFactor`.
+   * 
+   * @public
+   */
   prepare (fillFactor = 0.4) {
-    if (!this.grid) throw new Error(ERRORS.GRID_NOT_GENERATED);
+    // Si la grille n'a pas été générée, on le fait avant de préparer la grille.
+    if (!this.grid) this.generate();
     this.task = prepareGrid(this.grid, fillFactor);
   }
 
   /**
+   * Effectue un changement dans la grille en cours
+   * d'utilisation.
+   * 
+   * Lors d'un changement, on va garder ce changement en cache
+   * pour des fonctionnalités tel que le "undo".
+   * 
    * @public
    * @param {number} row
    * @param {number} column

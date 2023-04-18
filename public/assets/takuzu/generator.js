@@ -1,3 +1,5 @@
+// @ts-check
+
 import { TileValues } from "./constants.js";
 
 import {
@@ -7,9 +9,7 @@ import {
   getRandomNumber,
 } from "../utils/helpers.js";
 
-/**
- * @param {string[]} grid 
- */
+/** @param {string[]} grid */
 const splitGridIntoTiles = (grid) => {
   /** @type {string[][]} */  
   const splitted_grid = [];
@@ -33,7 +33,7 @@ const splitGridIntoTiles = (grid) => {
  * @returns {string[][] | null}
  */
 export const generateGrid = (size) => {
-  /** @type {string[][]} */  
+  /** @type {string[]} */  
   const grid = [];
   const columns = arrayFromLength(size);
   let rows = generateRows(size);
@@ -51,39 +51,37 @@ export const generateGrid = (size) => {
       index = getRandomNumber(filtered_rows.length - 1);
       row = filtered_rows[index];
 
-      if (!row) return null; // Dead end random (5-10% chance)
+      if (!row) return null;
       index = rows.indexOf(row);
-    } else {
-        index = getRandomNumber(rows.length - 1);
-        row = rows[index];
+    }
+    else {
+      index = getRandomNumber(rows.length - 1);
+      row = rows[index];
     }
 
     grid.push(row);
 
     for (let j = 0; j < row.length; j++) {
-      // On met à jour les colonnes.
       columns[j] += row[j];
     }
 
     switch (index) {
-    case 0:
-      rows = rows.splice(1);
-      break;
-    case rows.length - 1:
-      rows.pop();
-      break;
-    default:
-      rows = [...rows.slice(0, index), ...rows.slice(index + 1)];
-      break;
+      case 0:
+        rows = rows.splice(1);
+        break;
+      case rows.length - 1:
+        rows.pop();
+        break;
+      default:
+        rows = [...rows.slice(0, index), ...rows.slice(index + 1)];
+        break;
     }
   }
 
   return splitGridIntoTiles(grid);
 }
 
-/**
- * @param {number} size 
- */
+/** @param {number} size */
 const generateRows = (size) => {
   /** @type {string[]} */  
   const rows = [];
@@ -153,12 +151,9 @@ const filteringRows = (rows, pattern) => {
   return filtered_rows;
 }
 
-const moys = [];
-
 /**
  * @param {string[][]} grid 
  * @param {number} fillFactor - Un facteur qui défini à combien de % la grille sera remplie. 
- * @returns 
  */
 export const prepareGrid = (grid, fillFactor) => {
   /** @type {string[][]} */

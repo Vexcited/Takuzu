@@ -88,10 +88,10 @@ export const createGame = (size, fillFactor = 0.4) => {
       const rowItemElement = createElement("button", {
         type: "button",
         class: classNames(
-          "__game_grid_",
-           "button flex items-center justify-center aspect-square max-w-[64px] max-h-[64px] min-w-[24px] min-h-[24px] w-full h-full p-2",
-           "border-4 border-[#4C4F69]",
-           "bg-[#EFF1F5] disabled:bg-gradient-to-t disabled:from-[#7287FD] disabled:to-[#8839EF]"
+        "__game_grid_button",
+          "flex items-center justify-center aspect-square max-w-[64px] max-h-[64px] min-w-[24px] min-h-[24px] w-full h-full p-2",
+          "border-4 border-[#4C4F69]",
+          "bg-[#EFF1F5] disabled:bg-gradient-to-t disabled:from-[#7287FD] disabled:to-[#8839EF]"
         ),
 
         "data-row-index": rowIndex.toString(),
@@ -112,55 +112,63 @@ export const createGame = (size, fillFactor = 0.4) => {
         grid.change(rowIndex, columnIndex, new_value);
         rowItemElement.innerHTML = new_value === TileValues.EMPTY ? "" : createButtonContentFrom(new_value, true);
         rowItemElement.dataset.value = new_value;
+        
+        let isFull = true;
+        for (const row of grid.task) {
+          for (const column_item of row) {
+            if (column_item === TileValues.EMPTY) {
+              isFull = false;
+              break;
+            }
+          }
+        }
+
+        game_hints.innerText = "";
+        if (!isFull) return;
 
         const check = grid.check();
-
         if (check.error) {
-          let isFull = true;
-          for (const row of grid.task) {
-            for (const column_item of row) {
-              if (column_item === TileValues.EMPTY) {
-                isFull = false;
-                break;
-              }
-            }
-          }
-
-          if (!isFull) {
-            game_hints.innerText = "";
-            return;
-          }
-
           game_hints.innerText = check.message;
-        } 
-        else {
-          clearInterval(__timer);
-          game_hints.innerText = "Vous avez terminé!";
-          
-          document.querySelectorAll(".__game_grid_button").forEach(
-            button => {
-              button.onclick = () => null
-            }
-          );
-
-          document.querySelectorAll(".__game_actions_ingame").forEach(
-            button => {
-              button.classList.add("hidden");
-            }
-          );
-          
-          document.querySelectorAll(".__game_actions_finish").forEach(
-            button => {
-              button.classList.remove("hidden");
-            }
-          );
+          return;
         }
+
+        clearInterval(__timer);
+        game_hints.innerText = "Vous avez terminé!";
+        
+        document.querySelectorAll(".__game_grid_button").forEach(
+          button => {
+            // On désactive les events sur les boutons.
+            button.onclick = () => null;
+            button.oncontextmenu = () => null;
+            // On montre le curseur par défaut au survol des boutons
+            // pour ne pas donner l'impression qu'on peut cliquer dessus.
+            button.classList.add("cursor-default");
+          }
+        );
+
+        // On cache les actions qui ne sont sensé
+        // être disponible qu'en jeu.
+        document.querySelectorAll(".__game_actions_ingame").forEach(
+          button => {
+            button.classList.add("hidden");
+          }
+        );
+          
+        // On montre les actions qui sont
+        // disponible dès que la partie est terminée.
+        document.querySelectorAll(".__game_actions_finish").forEach(
+          button => {
+            button.classList.remove("hidden");
+          }
+        );
       };
 
+      /** Permet de supprimer le contenu d'une tuile. */
       const removeContent = () => {
         grid.change(rowIndex, columnIndex, TileValues.EMPTY);
         rowItemElement.dataset.value = TileValues.EMPTY;
         rowItemElement.innerHTML = "";
+        game_hints.innerText = "";
       }
 
       rowItemElement.onclick = (event) => {

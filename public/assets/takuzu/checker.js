@@ -1,3 +1,5 @@
+// @ts-check
+
 import { TileValues, ERRORS } from "./constants.js";
 import { countSubstrInStr } from "../utils/helpers.js";
 
