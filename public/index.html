@@ -27,6 +27,31 @@
 <body class="min-h-screen h-full bg-[#EFF1F5] text-[#4C4F69]">
   <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
   <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
+
+  <div id="__modal_username" class="z-[999] fixed inset-0 bg-[#9ca0b0] bg-opacity-70 flex justify-center items-center p-4">
+    <div class="max-w-[400px] w-full p-6 bg-[#eff1f5] rounded-md text-center flex flex-col gap-1">
+      <h2 class="text-2xl font-medium">
+        Choisissez un nom d'utilisateur !
+      </h2>
+      <p class="text-sm opacity-80 text-[#5c5f77]">
+        Ce nom d'utilisateur sera affiché pour les autres utilisateurs dans le mode en ligne et dans vos scores en mode solo.
+      </p>
+
+      <form id="__modal_username_form" class="flex flex-col gap-2 mt-4">
+        <input required
+          type="text"
+          id="__modal_username_input"
+          placeholder="ProTakuzuPlayerDu87"
+          class="outline-none px-4 py-2 bg-[#dce0e8] bg-opacity-60 text-center"
+          autocomplete="off"
+        />
+
+        <button type="submit" class="border border-[#7287fd] text-[#7287fd] hover:bg-[#7287fd] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
+          C'est parti !
+        </button>
+      </form>
+    </div>
+  </div>
   
   <section id="__route_/" class="flex flex-col h-screen justify-between gap-4 p-4">
     <div class="flex flex-col items-center justify-center gap-8 h-full">
@@ -63,7 +88,7 @@
           <!-- <hr class="border-[#4C4F69] opacity-50" /> -->
           <p class="border-[#4C4F69] opacity-50 text-center">ou...</p>
       
-          <button type="button" class="__start-takuzu-online border border-[#7287fd] text-[#7287fd] hover:bg-[#7287fd] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
+          <button id="__/move-to-online" type="button" class="border border-[#7287fd] text-[#7287fd] hover:bg-[#7287fd] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
             Jouer contre un adversaire!
           </button>
         </div>
