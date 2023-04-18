@@ -1,12 +1,18 @@
-const path = require("path");
+import path from "node:path";
+import { fileURLToPath } from 'url';
 
-const express = require("express");
+import express from "express";
+import expressWs from "express-ws";
+
+import { users, createUser, getConnectedUsers, getConnectedUser } from "./stores.js";
+
+// Source: <https://flaviocopes.com/fix-dirname-not-defined-es-module-scope/>
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-
-// Import de WS
-const expressWs = require("express-ws")(app);
-
-const { users, createUser, getConnectedUsers, getConnectedUser } = require("./stores");
+const expressWsInstance = expressWs(app);
+const ws_client = expressWsInstance.getWss('/api/ws');
 
 const public_folder_path = path.resolve(__dirname, "..", "public");
 app.use(express.static(public_folder_path));
@@ -15,7 +21,6 @@ app.get("/api/connected_users", (_, res) => {
   return res.json(getConnectedUsers());
 });
 
-const ws_client = expressWs.getWss('/api/ws');
 app.ws("/api/ws", (ws) => {
   /**
    * ID de l'utilisateur.

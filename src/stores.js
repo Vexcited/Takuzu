@@ -1,9 +1,9 @@
-const uuid = require("uuid");
-const users = {};
+import { v4 as uuid} from "uuid";
+export const users = {};
 
 /** @param {string} username - Nom du nouvel utilisateur. */
-const createUser = (username) => {
-  const id = uuid.v4();
+export const createUser = (username) => {
+  const id = uuid();
   users[id] = {
     name: username
   };
@@ -11,24 +11,17 @@ const createUser = (username) => {
   return id;
 };
 
-const getConnectedUsers = () => Object.entries(users).map(([id, user]) => ({
+export const getConnectedUsers = () => Object.entries(users).map(([id, user]) => ({
   id,
   name: user.name
 }));
 
 /** @param {string} id */
-const getConnectedUser = (id) => {
+export const getConnectedUser = (id) => {
   const user = users[id];
 
   return {
     id,
     name: user.name
   };
-} ;
-
-module.exports = {
-  getConnectedUsers,
-  getConnectedUser,
-  createUser,
-  users
 };
