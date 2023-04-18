@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * Compte le nombre d'occurrences de `substr` sur `str`.
  * 
@@ -24,4 +26,51 @@ export const arrayFromLength = (length) => {
 
 export const getRandomBoolean = (chance = 0.5) => chance > Math.random();
 
-export const classNames = (...classes) => classes.join(" ");
+/** @param {string[]} classes */
+export const classNames = (...classes) => classes
+  .filter(Boolean)
+  .join(" ");
+
+/** @param {string | HTMLElement} child */
+const transformChildrenToNode = (child) => {
+  if (typeof child === "string") {
+    return document.createTextNode(child);
+  }
+
+  return child;
+}
+
+/**
+ * @param {keyof HTMLElementTagNameMap} tagName 
+ * @param {{
+ *   class?: string,
+ *   children?: (
+ *     | (
+ *       | string
+ *       | HTMLElement
+ *     )[]
+ *     | string
+ *     | HTMLElement
+ *   )
+ * }} attributes
+ */
+export const createElement = (tagName, attributes = {}) => {
+  const element = document.createElement(tagName);
+
+  for (const key in attributes) {
+    if (key === "children") continue;
+    element.setAttribute(key, attributes[key]);
+  }
+
+  if (attributes.children) {
+    if (Array.isArray(attributes.children)) {
+      for (const child of attributes.children) {
+        element.appendChild(transformChildrenToNode(child));
+      }
+    }
+
+    else element.appendChild(transformChildrenToNode(attributes.children));
+  }
+
+  return element;
+};

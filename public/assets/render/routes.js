@@ -4,9 +4,10 @@ export const ROUTES_ID = {
   "/online": "__route_/online"
 };
 
-/**
- * @param {keyof typeof ROUTES_ID} id
- */
+/** @type {keyof typeof ROUTES_ID} */
+export let currentRoute = "/";
+
+/** @param {keyof typeof ROUTES_ID} id */
 export const selectActiveRoute = (id) => {
   const active = document.getElementById(ROUTES_ID[id]);
   active.classList.remove("hidden");
@@ -17,4 +18,6 @@ export const selectActiveRoute = (id) => {
     const route = document.getElementById(ROUTES_ID[route_id_key]);
     route.classList.add("hidden");
   }
+
+  currentRoute = id;
 }

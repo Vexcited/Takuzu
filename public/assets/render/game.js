@@ -1,6 +1,6 @@
 import Takuzu from "../takuzu/index.js";
 import { TileValues } from "../takuzu/constants.js";
-import { classNames } from "../utils/helpers.js";
+import { classNames, createElement } from "../utils/helpers.js";
 
 /** @type {HTMLDivElement} */
 const game_board = document.getElementById("__/game_board");
@@ -13,20 +13,6 @@ const game_timer = document.getElementById("__/game_timer");
 let grid = null;
 
 const cleanGameRoot = () => game_board.innerHTML = "";
-
-/**
- * @param {keyof HTMLElementTagNameMap} tagName 
- * @param {Record<string, string>} attributes
- */
-const createElement = (tagName, attributes = {}) => {
-  const element = document.createElement(tagName);
-
-  for (const key in attributes) {
-    element.setAttribute(key, attributes[key]);
-  }
-
-  return element;
-};
 
 const createZeroSVG = (gradientInside = false) => {
   if (gradientInside) return `
@@ -86,15 +72,15 @@ export const createGame = (size) => {
     class: "flex flex-col items-center justify-center gap-1 w-full h-[75vh]"
   });
 
-  for (let columnIndex = 0; columnIndex < grid.task.length; columnIndex++) {
-    const column = grid.task[columnIndex];
+  for (let rowIndex = 0; rowIndex < grid.task.length; rowIndex++) {
+    const row = grid.task[rowIndex];
 
-    const columnElement = createElement("div", {
+    const rowContainerElement = createElement("div", {
       class: "flex flex-row gap-1 w-full h-auto justify-center"
     });
 
-    for (let rowItemIndex = 0; rowItemIndex < column.length; rowItemIndex++) {
-      const row = column[rowItemIndex];
+    for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
+      const value = row[columnIndex];
       
       const rowItemElement = createElement("button", {
         type: "button",
@@ -105,26 +91,22 @@ export const createGame = (size) => {
            "bg-[#EFF1F5] disabled:bg-gradient-to-t disabled:from-[#7287FD] disabled:to-[#8839EF]"
         ),
 
-        "data-row-index": rowItemIndex.toString(),
+        "data-row-index": rowIndex.toString(),
         "data-column-index": columnIndex.toString(), 
-        "data-value": row
+        "data-value": value
       });
 
-      if (row !== TileValues.EMPTY) {
+      if (value !== TileValues.EMPTY) {
         rowItemElement.setAttribute("disabled", true);
       }
 
-      rowItemElement.innerHTML = row === TileValues.EMPTY ? "" : createButtonContentFrom(row);
+      rowItemElement.innerHTML = value === TileValues.EMPTY ? "" : createButtonContentFrom(value);
 
       const updateContent = () => {
-        let new_value = rowItemElement.dataset.value;
-        
-        // TODO: Optimiser plus tard.
-        if (new_value === TileValues.EMPTY) new_value = TileValues.ZERO;
-        else if (new_value === TileValues.ZERO) new_value = TileValues.ONE;
-        else if (new_value === TileValues.ONE) new_value = TileValues.ZERO;
+        const old_value = rowItemElement.dataset.value;
+        const new_value = (old_value === TileValues.ZERO) ? TileValues.ONE : TileValues.ZERO;
 
-        grid.change(columnIndex, rowItemIndex, new_value);
+        grid.change(rowIndex, columnIndex, new_value);
         rowItemElement.innerHTML = new_value === TileValues.EMPTY ? "" : createButtonContentFrom(new_value, true);
         rowItemElement.dataset.value = new_value;
 
@@ -173,7 +155,7 @@ export const createGame = (size) => {
       };
 
       const removeContent = () => {
-        grid.change(columnIndex, rowItemIndex, TileValues.EMPTY);
+        grid.change(rowIndex, columnIndex, TileValues.EMPTY);
         rowItemElement.dataset.value = TileValues.EMPTY;
         rowItemElement.innerHTML = "";
       }
@@ -193,10 +175,10 @@ export const createGame = (size) => {
         removeContent();
       }
 
-      columnElement.appendChild(rowItemElement);
+      rowContainerElement.appendChild(rowItemElement);
     }
 
-    mainGrid.appendChild(columnElement);
+    mainGrid.appendChild(rowContainerElement);
   }
 
   game_board.appendChild(mainGrid);

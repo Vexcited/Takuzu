@@ -1,38 +1,13 @@
 const uuid = require("uuid");
 const users = {};
 
-/**
- * On passe l'instance du serveur WS pour notifier les utilisateurs plus tard.
- */
-const createUser = (ws_client) => {
+/** @param {string} username - Nom du nouvel utilisateur. */
+const createUser = (username) => {
   const id = uuid.v4();
   users[id] = {
-    name: "Player " + id.split("-")[0],
-    pingTimerTimeout: setInterval(() => {
-      const user = users[id];
-      const lastDate = user.lastPingTime.getTime();
-      const currentDate = new Date().getTime()
-      const timeoutDate = currentDate - 10_000;
-
-      if (lastDate > timeoutDate) return;
-      clearInterval(user.pingTimerTimeout);
-      delete users[id];
-      
-      // On notifie tout les autres clients qu'un utilisateur est parti.
-      const connectedUsers = getConnectedUsers();
-      ws_client.clients.forEach((client) => {
-        client.send(`connectedUsers:${JSON.stringify(connectedUsers)}`);
-      });
-    }, 5_000),
-    lastPingTime: new Date()
+    name: username
   };
 
-  // On notifie tout les autres clients qu'il y a un nouvel utilisateur.
-  const connectedUsers = getConnectedUsers();
-  ws_client.clients.forEach((client) => {
-    client.send(`connectedUsers:${JSON.stringify(connectedUsers)}`);
-  });
-  
   return id;
 };
 
@@ -41,8 +16,19 @@ const getConnectedUsers = () => Object.entries(users).map(([id, user]) => ({
   name: user.name
 }));
 
+/** @param {string} id */
+const getConnectedUser = (id) => {
+  const user = users[id];
+
+  return {
+    id,
+    name: user.name
+  };
+} ;
+
 module.exports = {
   getConnectedUsers,
+  getConnectedUser,
   createUser,
   users
 };
