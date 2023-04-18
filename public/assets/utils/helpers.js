@@ -26,6 +26,9 @@ export const arrayFromLength = (length) => {
 
 export const getRandomBoolean = (chance = 0.5) => chance > Math.random();
 
+/** @param {Array} arr */
+export const takeRandomIndexFromArray = (arr) => Math.floor((Math.random() * arr.length));
+
 /** @param {string[]} classes */
 export const classNames = (...classes) => classes
   .filter(Boolean)

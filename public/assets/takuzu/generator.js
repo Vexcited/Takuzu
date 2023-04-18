@@ -3,7 +3,7 @@ import { TileValues } from "./constants.js";
 import {
   arrayFromLength,
   countSubstrInStr,
-  getRandomBoolean,
+  takeRandomIndexFromArray,
   getRandomNumber,
 } from "../utils/helpers.js";
 
@@ -153,6 +153,8 @@ const filteringRows = (rows, pattern) => {
   return filtered_rows;
 }
 
+const moys = [];
+
 /**
  * @param {string[][]} grid 
  * @param {number} fillFactor - Un facteur qui défini à combien de % la grille sera remplie. 
@@ -160,33 +162,24 @@ const filteringRows = (rows, pattern) => {
  */
 export const prepareGrid = (grid, fillFactor) => {
   /** @type {string[][]} */
-  const prepared_grid = [];
-  
-  for (let i = 0; i < grid.length; i++) {
-    /** @type {string[]} */
-    const prepared_row = [];
+  const prepared_grid = [...grid];
 
-    for (let j = 0; j < grid[i].length; j++) {
-      getRandomBoolean(fillFactor)
-        ? prepared_row.push(grid[i][j])
-        : prepared_row.push(TileValues.EMPTY);
-    }
+  const gridSize = grid.length;
+  const totalItemsInGrid = gridSize ** 2;
+  // On calcule le nombre d'items qu'on doit remplir en fonction du `fillFactor`.
+  const numberOfFilledItems = Math.floor(totalItemsInGrid * fillFactor);
+  const numberOfEmptyItems = totalItemsInGrid - numberOfFilledItems;
 
-    prepared_grid.push(prepared_row);
+  let currentNumberOfEmptyItems = 0;
+
+  while (numberOfEmptyItems !== currentNumberOfEmptyItems) {
+    const rowIndex = takeRandomIndexFromArray(prepared_grid);
+    const columnIndex = takeRandomIndexFromArray(prepared_grid[rowIndex]);
+
+    if (prepared_grid[rowIndex][columnIndex] === TileValues.EMPTY) continue;
+    prepared_grid[rowIndex][columnIndex] = TileValues.EMPTY;
+    currentNumberOfEmptyItems++;
   }
-
-  let isEmpty = true;
-  for (const row of prepared_grid) {
-    for (const column_item of row) {
-      if (column_item !== TileValues.EMPTY) {
-        isEmpty = false;
-        break;
-      }
-    }
-  }
-
-  // Prépare une autre grille si elle est entièrement vide.
-  if (isEmpty) return prepareGrid(grid, fillFactor);
 
   return prepared_grid;
 };

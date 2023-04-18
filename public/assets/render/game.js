@@ -1,6 +1,6 @@
 import Takuzu from "../takuzu/index.js";
 import { TileValues } from "../takuzu/constants.js";
-import { classNames, createElement } from "../utils/helpers.js";
+import { classNames, createElement, getRandomNumber } from "../utils/helpers.js";
 
 /** @type {HTMLDivElement} */
 const game_board = document.getElementById("__/game_board");
@@ -60,16 +60,19 @@ const createButtonContentFrom = (value, gradientInside = false) => {
   else if (value === "1") return createOneSVG(gradientInside);
 } 
 
-/** @param {number} size */
-export const createGame = (size) => {
+/**
+ * @param {number} size
+ * @param {number} fillFactor
+ */
+export const createGame = (size, fillFactor = 0.4) => {
   cleanGameRoot();
 
   grid = new Takuzu(size);
   grid.generate();
-  grid.prepare(0.33);
+  grid.prepare(fillFactor);
 
   const mainGrid = createElement("div", {
-    class: "flex flex-col items-center justify-center gap-1 w-full h-[75vh]"
+    class: "flex flex-col items-center justify-center gap-1 w-full"
   });
 
   for (let rowIndex = 0; rowIndex < grid.task.length; rowIndex++) {

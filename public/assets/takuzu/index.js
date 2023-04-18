@@ -52,10 +52,8 @@ class Takuzu {
   }
 
   /** @public */
-  prepare (fillFactor = 0.33) {
+  prepare (fillFactor = 0.4) {
     if (!this.grid) throw new Error(ERRORS.GRID_NOT_GENERATED);
-    if (fillFactor > 1 || fillFactor < 0.2) throw new Error(ERRORS.INVALID_FILL_FACTOR);
-
     this.task = prepareGrid(this.grid, fillFactor);
   }
 
