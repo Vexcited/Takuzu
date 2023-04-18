@@ -29,7 +29,7 @@ export const getRandomBoolean = (chance = 0.5) => chance > Math.random();
 /** @param {Array} arr */
 export const takeRandomIndexFromArray = (arr) => Math.floor((Math.random() * arr.length));
 
-/** @param {string[]} classes */
+/** @param {(string | boolean | undefined)[]} classes */
 export const classNames = (...classes) => classes
   .filter(Boolean)
   .join(" ");
@@ -77,3 +77,6 @@ export const createElement = (tagName, attributes = {}) => {
 
   return element;
 };
+
+/** @param {HTMLElement} element */
+export const renderToBody = (element) => document.body.appendChild(element);

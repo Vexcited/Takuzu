@@ -1,8 +1,8 @@
 // @ts-check
 
-import { rerenderUsersList } from "../render/online.js";
+// import { rerenderUsersList } from "../render/pages/online.js";
 import { getConnectedUsers } from "./rest.js";
-import { currentRoute } from "../render/routes.js";
+import * as router from "../render/routes.js";
 
 export class Connection {
   /**
@@ -134,16 +134,14 @@ export class Connection {
       case "new_connected_user": {
         this.onlineUsers.push(JSON.parse(msg.data));
         // On refait le rendu de la liste dans la route `/online`.
-        if (currentRoute === "/online") rerenderUsersList(); 
+        if (router.current.route === "/online") router.current.update();
         break;
       }
 
       case "disconnected_user": {
-        this.onlineUsers = this.onlineUsers.filter(
-          user => user.id !== msg.data
-        );
+        this.onlineUsers = this.onlineUsers.filter(user => user.id !== msg.data);
         // On refait le rendu de la liste dans la route `/online`.
-        if (currentRoute === "/online") rerenderUsersList();
+        if (router.current.route === "/online") router.current.update();
         break;
       }
     }

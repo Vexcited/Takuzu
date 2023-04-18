@@ -1,23 +1,30 @@
-export const ROUTES_ID = {
-  "/": "__route_/",
-  "/game": "__route_/game",
-  "/online": "__route_/online"
-};
+import RenderPageHome from "./pages/index.js";
+import RenderPageOnline from "./pages/online.js";
 
-/** @type {keyof typeof ROUTES_ID} */
-export let currentRoute = "/";
+/** @type {InstanceType<router[keyof router]>} */
+export let current = null;
 
-/** @param {keyof typeof ROUTES_ID} id */
-export const selectActiveRoute = (id) => {
-  const active = document.getElementById(ROUTES_ID[id]);
-  active.classList.remove("hidden");
-  
-  for (const route_id_key in ROUTES_ID) {
-    if (id === route_id_key) continue;
-    
-    const route = document.getElementById(ROUTES_ID[route_id_key]);
-    route.classList.add("hidden");
-  }
+/** Permet d'initialiser le router. */
+export const initialize = () => {
+  const route = window.location.pathname.trim();
+  current = router[route] ? new router[route]() : null;
 
-  currentRoute = id;
+  // On redirige sur la page d'accueil pour les erreurs 404.
+  if (current === null) navigate("/");
 }
+
+/**
+ * Permet de naviguer vers une nouvelle route.
+ * @param {keyof typeof router} route
+ */
+export const navigate = (route) => {
+  current.destroy();
+
+  window.history.pushState({}, "", route);
+  current = new router[route]();
+}
+
+const router = /** @type {const} */ ({
+  "/": RenderPageHome,
+  "/online": RenderPageOnline
+});

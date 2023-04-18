@@ -6,7 +6,7 @@ import expressWs from "express-ws";
 
 import { users, createUser, getConnectedUsers, getConnectedUser } from "./stores.js";
 
-import Takuzu from "../public/assets/takuzu/index.js";
+// import Takuzu from "../public/assets/takuzu/index.js";
 
 // Source: <https://flaviocopes.com/fix-dirname-not-defined-es-module-scope/>
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +18,7 @@ const ws_client = expressWsInstance.getWss('/api/ws');
 
 const public_folder_path = path.resolve(__dirname, "..", "public");
 app.use(express.static(public_folder_path));
+
 
 app.get("/api/connected_users", (_, res) => {
   return res.json(getConnectedUsers());
@@ -61,6 +62,10 @@ app.ws("/api/ws", (ws) => {
       }
     }
   });
+});
+
+app.get("*", (_, res) => {
+  res.sendFile(path.resolve(public_folder_path, "index.html"));
 });
 
 app.listen(8080, () => console.log("started."));

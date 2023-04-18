@@ -28,91 +28,10 @@
   <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
   <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
 
-  <div id="__modal_username" class="z-[999] fixed inset-0 bg-[#9ca0b0] bg-opacity-70 flex justify-center items-center p-4">
-    <div class="max-w-[400px] w-full p-6 bg-[#eff1f5] rounded-md text-center flex flex-col gap-1">
-      <h2 class="text-2xl font-medium">
-        Choisissez un nom d'utilisateur !
-      </h2>
-      <p class="text-sm opacity-80 text-[#5c5f77]">
-        Ce nom d'utilisateur sera affiché pour les autres utilisateurs dans le mode en ligne et dans vos scores en mode solo.
-      </p>
-
-      <form id="__modal_username_form" class="flex flex-col gap-2 mt-4">
-        <input required
-          type="text"
-          id="__modal_username_input"
-          placeholder="ProTakuzuPlayerDu87"
-          class="outline-none px-4 py-2 bg-[#dce0e8] bg-opacity-60 text-center"
-          autocomplete="off"
-        />
-
-        <button type="submit" class="border border-[#7287fd] text-[#7287fd] hover:bg-[#7287fd] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
-          C'est parti !
-        </button>
-      </form>
-    </div>
-  </div>
-  
-  <section id="__route_/" class="flex flex-col h-screen justify-between gap-4 p-4">
-    <div class="flex flex-col items-center justify-center gap-8 h-full">
-      <header class="flex flex-col gap-2 items-center">
-        <h1 class="font-medium text-3xl">
-          Takuzu
-        </h1>
-    
-        <p class="font-normal text-md text-center">
-          Implémentation du jeu de réflexion <a class="font-medium text-[#7287fd] border-b border-dotted hover:border-solid border-[#7287fd]" target="_blank" href="https://fr.wikipedia.org/wiki/Takuzu">Takuzu, aussi connu sous le nom de Binairo</a>
-        </p>
-      </header>
-  
-      <main class="flex flex-col items-center gap-8">
-        <div class="flex flex-col gap-2 w-[250px]">
-          <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="4">
-            Jouer en solo
-          </button>
-          <!-- <div class="flex gap-4 mt-4">
-            <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="4">
-              4x4
-            </button>
-            <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="6">
-              6x6
-            </button>
-            <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="8">
-              8x8
-            </button>
-            <button type="button" class="__start-takuzu border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]" data-size="10">
-              10x10
-            </button>
-          </div> -->
-    
-          <!-- <hr class="border-[#4C4F69] opacity-50" /> -->
-          <p class="border-[#4C4F69] opacity-50 text-center">ou...</p>
-      
-          <button id="__/move-to-online" type="button" class="border border-[#7287fd] text-[#7287fd] hover:bg-[#7287fd] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
-            Jouer contre un adversaire!
-          </button>
-        </div>
-    
-        <div class="flex flex-col gap-2 p-2 border-[#EFF1F5] text-center">
-          <h2 class="font-medium text-xl">Règles</h2>
-    
-          <p>- Autant de 1 que de 0 sur chaque ligne et sur chaque colonne.</p>
-          <p>- 2 lignes ou 2 colonnes ne peuvent être identiques.</p>
-          <p>- Pas plus de 2 tuiles identiques côte à côte.</p>
-        </div>
-      </main>
-    </div>
-
-    <footer class="p-4 flex-shrink-0 flex-col justify-center text-center">
-      <p class="font-medium text-md mb-2">
-        Projet réalisé pour les <a class="text-[#7287fd] border-b border-dotted hover:border-solid border-[#7287fd]" target="_blank" href="https://trophees-nsi.fr/">Trophées NSI</a> 2023.
-      </p>
-      <a class="text-[#7287fd] border-b border-dotted hover:border-solid border-[#7287fd]" target="_blank" href="https://github.com/Vexcited/takuzu">Voir le code source</a>
-    </footer>
+  <section id="__route_/solo" class="hidden flex flex-col h-screen justify-between gap-4 p-4">
   </section>
 
-  <!-- Là où on va faire le rendu de l'interface. -->
-  <section class="hidden flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8" id="__route_/game">
+  <section id="__route_/game" class="hidden flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8">
     <h2 id="__/game_timer" class="font-medium text-xl">00:00:00</h2>
     <div id="__/game_board" class="w-full"></div>
 
@@ -126,20 +45,8 @@
       </div>
     </div>
   </section>
-
-  <section class="hidden flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8" id="__route_/online">
-    <h1 class="text-3xl font-medium">
-      Takuzu en ligne
-    </h1>
-
-    <div id="__/online_users_list" class="flex flex-col gap-4"></div>
-
-    <button type="button" id="__/online_action_back_home" class="border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]">
-      Revenir à la page d'accueil
-    </button>
-  </section>
   
   <!-- On importe le script principal pour exécuter le jeu. -->
-  <script type="module" src="./assets/index.js"></script>
+  <script type="module" src="/assets/index.js"></script>
 </body>
 </html>
