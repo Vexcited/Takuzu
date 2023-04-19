@@ -26,41 +26,63 @@ class RenderUsernameSelectionModal {
 
   /** @private */
   build = () => {
+    // Si on a déjà été connecté avant, on prend le nom d'utilisateur sauvegardé.
+    let saved_username = localStorage.getItem("username");
+    saved_username = saved_username ? saved_username.trim() : null;
+
+    /** @param {string} username  */
+    const connect = async (username) => {
+      form_button.innerHTML = "Connexion...";
+      form_input.setAttribute("disabled", "true");
+
+      if (!username) {
+        alert("Vous devez entrer un nom d'utilisateur !");
+        form_input.removeAttribute("disabled");
+        form_button.innerHTML = "C'est parti !";
+        return;
+      }
+      
+      const ws = await Connection.create(username);
+      const [, setWS] = useWS();
+      setWS(ws);
+  
+      this.destroy();
+
+      localStorage.setItem("username", username);
+      router.initialize();
+    }
+
     const form_input = createElement("input", {
       required: "true",
       type: "text",
       placeholder: "ProTakuzuPlayerDu87",
       class: "outline-none px-4 py-2 bg-[#dce0e8] bg-opacity-60 text-center",
-      autocomplete: "off"
+      autocomplete: "off",
+      value: saved_username ?? "",
+      disabled: saved_username ? "true" : undefined
     });
+
+    const form_button = createButtonComponent({
+      type: "submit",
+      color: "primary",
+      children: "C'est parti !"
+    })
 
     const form = createElement("form", {
       class: "flex flex-col gap-2 mt-4"
     }, [
       form_input,
-      createButtonComponent({
-        type: "submit",
-        color: "primary",
-        content: "C'est parti !"
-      })
+      form_button
     ]);
 
+    // Si on a déjà un nom d'utilisateur sauvegardé on se connecte automatiquement avec celui-là.
+    if (saved_username) connect(saved_username);
+    
     form.onsubmit = async (event) => {
       event.preventDefault();
-      const [, setWS] = useWS();
-  
-      const username = form_input.value.trim();
 
-      if (!username) {
-        alert("Vous devez entrer un nom d'utilisateur !");
-        return;
-      }
-    
-      const ws = await Connection.create(username);
-      setWS(ws);
-  
-      this.destroy();
-      router.initialize();
+      const username = form_input.value.trim();
+      await connect(username);
     }
 
     const node = createElement(
