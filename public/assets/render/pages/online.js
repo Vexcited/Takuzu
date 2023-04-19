@@ -59,7 +59,7 @@ class RenderPageOnline {
     });
 
     const go_home_button = createButtonComponent({
-      content: "Revenir à la page d'accueil",
+      children: "Revenir à la page d'accueil",
       color: "text",
       type: "button"
     });

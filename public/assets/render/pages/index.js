@@ -27,12 +27,14 @@ class RenderPageHome {
   /** @private */
   make = () => {
     const play_solo_button = createButtonComponent({
-      content: "Jouer en solo",
+      children: "Jouer en solo",
       color: "text"
     });
 
+    play_solo_button.onclick = () => navigate("/solo");
+
     const play_multiplayer_button = createButtonComponent({
-      content: "Jouer contre un adversaire!",
+      children: "Jouer contre un adversaire!",
       color: "primary"
     });
 
