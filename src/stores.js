@@ -1,22 +1,21 @@
 // @ts-check
 
-import { v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 export const users = {};
 
 /** @param {string} username - Nom du nouvel utilisateur. */
 export const createUser = (username) => {
   const id = uuid();
   users[id] = {
-    name: username
+    name: username,
+    status: "idle"
   };
 
   return id;
 };
 
-export const getConnectedUsers = () => Object.entries(users).map(([id, user]) => ({
-  id,
-  name: user.name
-}));
+export const getConnectedUsers = () => Object.keys(users)
+  .map((id) => getConnectedUser(id));
 
 /** @param {string} id */
 export const getConnectedUser = (id) => {
@@ -24,6 +23,6 @@ export const getConnectedUser = (id) => {
 
   return {
     id,
-    name: user.name
+    ...user
   };
 };

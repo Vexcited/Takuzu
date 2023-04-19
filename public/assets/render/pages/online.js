@@ -6,6 +6,13 @@ import { createElement, renderToBody } from "../../utils/helpers.js";
 
 import { createButtonComponent } from "../components/button.js";
 
+/** @type {Record<import("../../types.js").UserConnected["status"], string>} */
+const STATUS_TEXT = /** @type {const} */ ({
+  idle: "Dans les menus",
+  "in-game-online": "En partie en ligne",
+  "in-game-solo": "En partie solo"
+});
+
 /** @param {import("../../types.js").UserConnected} user */
 const createOnlineUserComponent = (user) => createElement(
   "div",
@@ -20,7 +27,7 @@ const createOnlineUserComponent = (user) => createElement(
     createElement(
       "p",
       { class: "text-sm" },
-      user.id
+      STATUS_TEXT[user.status]
     )
   ]
 );
@@ -76,11 +83,28 @@ class RenderPageOnline {
     this.online_users_list.innerHTML = "";
     if (!connection) return;
 
-    for (const user of connection.onlineUsers) {
-      if (user.id === connection.user.id) continue;
-  
-      const element = createOnlineUserComponent(user);
-      this.online_users_list.appendChild(element);
+    // On retire 1 car on ne veut pas compter nous même.
+    if (connection.onlineUsers.length - 1 > 0) {
+      for (const user of connection.onlineUsers) {
+        if (user.id === connection.user.id) continue;
+    
+        const element = createOnlineUserComponent(user);
+        this.online_users_list.appendChild(element);
+      }
+    }
+    else {
+      this.online_users_list.appendChild(
+        createElement("div", {
+          class: "flex flex-col items-center justify-center gap-2"
+        }, [
+          createElement("h2", {
+            class: "text-xl font-medium"
+          }, "Personne est en ligne !"),
+          createElement("p", {
+            class: "text-md"
+          }, "Revenez plus tard...")
+        ])
+      )
     }
   }
 
