@@ -44,35 +44,37 @@ const transformChildrenToNode = (child) => {
 }
 
 /**
- * @param {keyof HTMLElementTagNameMap} tagName 
- * @param {{
- *   class?: string,
- *   children?: (
- *     | (
- *       | string
- *       | HTMLElement
- *     )[]
+ * @template {keyof HTMLElementTagNameMap} T 
+ * @param {T} tagName 
+ * @param {Record<string, string> & {
+ *   class?: string
+ * }} props
+ * @param {(
+ *   | (
  *     | string
- *     | HTMLElement
- *   )
- * }} attributes
+ *     | HTMLElementTagNameMap[keyof HTMLElementTagNameMap]
+ *   )[]
+ *   | string
+ *   | HTMLElementTagNameMap[keyof HTMLElementTagNameMap]
+ * )} [children]
+ * 
+ * @returns {HTMLElementTagNameMap[T]}
  */
-export const createElement = (tagName, attributes = {}) => {
+export const createElement = (tagName, props = {}, children) => {
   const element = document.createElement(tagName);
 
-  for (const key in attributes) {
-    if (key === "children") continue;
-    element.setAttribute(key, attributes[key]);
+  for (const key in props) {
+    element.setAttribute(key, props[key]);
   }
 
-  if (attributes.children) {
-    if (Array.isArray(attributes.children)) {
-      for (const child of attributes.children) {
+  if (children) {
+    if (Array.isArray(children)) {
+      for (const child of children) {
         element.appendChild(transformChildrenToNode(child));
       }
     }
 
-    else element.appendChild(transformChildrenToNode(attributes.children));
+    else element.appendChild(transformChildrenToNode(children));
   }
 
   return element;

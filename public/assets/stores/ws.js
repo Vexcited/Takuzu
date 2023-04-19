@@ -1,11 +1,13 @@
+// @ts-check
+
 /**
  * La connexion au serveur WebSocket.
  * `null` si la connexion n'est pas encore établie.
  * 
- * @type {Connection | null}
+ * @type {import("../utils/websocket").Connection | null}
  */
 let ws = null;
-/** @param {Connection | null} */
-let setWS = (value) => (ws = value); 
+/** @param {import("../utils/websocket").Connection | null} value */
+const setWS = (value) => (ws = value); 
 
-export const useWS = () => [ws, setWS];
+export const useWS = () => /** @type {const} */ ([() => ws, setWS]);

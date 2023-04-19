@@ -96,14 +96,11 @@ export const createGame = (size, fillFactor = 0.4) => {
 
         "data-row-index": rowIndex.toString(),
         "data-column-index": columnIndex.toString(), 
-        "data-value": value
-      });
-
-      if (value !== TileValues.EMPTY) {
-        rowItemElement.setAttribute("disabled", true);
-      }
-
-      rowItemElement.innerHTML = value === TileValues.EMPTY ? "" : createButtonContentFrom(value);
+        "data-value": value,
+        disabled: value !== TileValues.EMPTY
+      },
+      value === TileValues.EMPTY ? "" : createButtonContentFrom(value)
+      );
 
       const updateContent = () => {
         const old_value = rowItemElement.dataset.value;

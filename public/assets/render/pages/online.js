@@ -4,29 +4,25 @@ import { navigate } from "../routes.js";
 import { useWS } from "../../stores/ws.js";
 import { createElement, renderToBody } from "../../utils/helpers.js";
 
+import { createButtonComponent } from "../components/button.js";
+
 /** @param {import("../../types.js").UserConnected} user */
 const createOnlineUserComponent = (user) => createElement(
   "div",
-  {
-    class: "w-full flex flex-col gap-1",
-    children: [
-      createElement(
-        "h3",
-        {
-          class: "text-md font-medium",
-          children: user.name
-        }
-      ),
+  { class: "w-full flex flex-col gap-1" },
+  [
+    createElement(
+      "h3",
+      { class: "text-md font-medium" },
+      user.name
+    ),
 
-      createElement(
-        "p",
-        {
-          class: "text-sm",
-          children: user.id
-        }
-      )
-    ]
-  }
+    createElement(
+      "p",
+      { class: "text-sm" },
+      user.id
+    )
+  ]
 );
 
 class RenderPageOnline {
@@ -49,17 +45,16 @@ class RenderPageOnline {
   make = () => {
     const title = createElement("h1", {
       class: "text-3xl font-medium",
-      children: "Takuzu en ligne"
-    })
+    }, "Takuzu en ligne")
 
     this.online_users_list = createElement("div", {
       class: "flex flex-col gap-4"
     });
 
-    const go_home_button = createElement("button", {
-      type: "button",
-      class: "border border-[#4C4F69] text-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5] hover:font-medium px-4 py-2 hover:scale-105 transition-[transform,background]",
-      children: "Revenir à la page d'accueil"
+    const go_home_button = createButtonComponent({
+      content: "Revenir à la page d'accueil",
+      color: "text",
+      type: "button"
     });
 
     go_home_button.onclick = () => {
@@ -69,19 +64,20 @@ class RenderPageOnline {
 
     this.container = createElement("section", {
       class: "flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8",
-      children: [title, this.online_users_list, go_home_button]
-    });
+    }, [title, this.online_users_list, go_home_button]);
   }
 
   /** @public */
   update = () => {
     const [ws] = useWS();
+    const connection = ws();
 
     // On vide le contenu de la liste.
     this.online_users_list.innerHTML = "";
+    if (!connection) return;
 
-    for (const user of ws.onlineUsers) {
-      if (user.id === ws.user.id) continue;
+    for (const user of connection.onlineUsers) {
+      if (user.id === connection.user.id) continue;
   
       const element = createOnlineUserComponent(user);
       this.online_users_list.appendChild(element);
