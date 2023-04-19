@@ -46,7 +46,7 @@ const transformChildrenToNode = (child) => {
 /**
  * @template {keyof HTMLElementTagNameMap} T 
  * @param {T} tagName 
- * @param {Record<string, string> & {
+ * @param {Record<string, string | undefined> & {
  *   class?: string
  * }} props
  * @param {(
@@ -64,7 +64,9 @@ export const createElement = (tagName, props = {}, children) => {
   const element = document.createElement(tagName);
 
   for (const key in props) {
-    element.setAttribute(key, props[key]);
+    const value = props[key];
+    if (typeof value === "undefined") continue;
+    element.setAttribute(key, value);
   }
 
   if (children) {
@@ -81,4 +83,4 @@ export const createElement = (tagName, props = {}, children) => {
 };
 
 /** @param {HTMLElement} element */
-export const renderToBody = (element) => document.body.appendChild(element);
+export const renderToBody = (element) => element && document.body.appendChild(element);
