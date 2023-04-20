@@ -93,7 +93,9 @@ export class Connection {
     });
 
     // On récupère les utilisateurs actuellement connectés.
-    const onlineUsers = await getConnectedUsers();
+    const onlineUsers = (await getConnectedUsers())
+      // On transforme la liste d'utilisateurs en un objet d'utilisateurs, + simple pour les mutations plus tard.
+      .reduce((a, v) => ({ ...a, [v.id]: v}), {}) 
 
     return new Connection(ws, user, onlineUsers);
   }
