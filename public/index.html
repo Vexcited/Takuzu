@@ -11,8 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- <link rel="stylesheet" href="./src/styles/reset.css" />
-  <link rel="stylesheet" href="./src/styles/globals.css" /> -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -28,24 +26,6 @@
   <!-- Au cas où l'utilisateur n'a pas activé JavaScript, on l'averti. -->
   <noscript>Ce site a besoin de JavaScript pour fonctionner.</noscript>
 
-  <section id="__route_/solo" class="hidden flex flex-col h-screen justify-between gap-4 p-4">
-  </section>
-
-  <section id="__route_/game" class="hidden flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8">
-    <h2 id="__/game_timer" class="font-medium text-xl">00:00:00</h2>
-    <div id="__/game_board" class="w-full"></div>
-
-    <div class="flex flex-col gap-3 items-center justify-center">
-      <p id="__/game_hint"></p>
-      
-      <div class="flex gap-2 flex-col-reverse sm:flex-row items-center justify-center">
-        <button class="__game_actions_ingame bg-[#4C4F69] text-[#EFF1F5] px-4 py-2 border border-[#4C4F69]" type="button" id="__/game_action_back_home1">Quitter</button>
-        <button class="__game_actions_finish hidden bg-[#4C4F69] text-[#EFF1F5] px-4 py-2 border border-[#4C4F69]" type="button" id="__/game_action_back_home2">Revenir au menu</button>
-        <button class="bg-[#EFF1F5] text-[#4C4F69] px-4 py-2 border border-[#4C4F69] hover:bg-[#4C4F69] hover:text-[#EFF1F5]" id="__/game_action_back_reset" type="button">Nouvelle grille</button>
-      </div>
-    </div>
-  </section>
-  
   <!-- On importe le script principal pour exécuter le jeu. -->
   <script type="module" src="/assets/index.js"></script>
 </body>
