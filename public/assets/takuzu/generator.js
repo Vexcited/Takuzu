@@ -82,15 +82,29 @@ export const generateGrid = (size) => {
   return splitGridIntoTiles(grid);
 }
 
+// const getRandomRow = (size = 4) => {
+//   let result = "";
+//   let counter = 0;
+
+//   while (counter < size) {
+//     result += "01".charAt(Math.floor(Math.random() * 2));
+//     counter += 1;
+//   }
+
+//   return result;
+// }
+
 /** @param {number} size */
 const generateRows = (size) => {
   /** @type {import("./types").TakuzuGrid[number]} */  
   const rows = [];
+  
   const max = 2 ** size;
-
   for (let i = 0; i < max; i++) {
+  // while (rows.length < size) {
     const str = /** @type {import("./types").TakuzuGrid[number][number]} */ (
       i.toString(2).padStart(size, TileValues.ZERO).toString()
+      // getRandomRow(size)
     );
 
     if (

@@ -57,6 +57,8 @@ const createButtonContentFrom = (value, gradientInside = false) => {
  * @param {number} [props.fillFactor]
  * @param {HTMLElement} props.timerElement
  * @param {HTMLElement} props.hintsElement
+ * @param {() => unknown} [props.onCompleted]
+ * @param {() => unknown} [props.onGridChange]
  * @returns {HTMLDivElement}
  */
 export const createTakuzuGridComponent = (props) => {
@@ -84,14 +86,14 @@ export const createTakuzuGridComponent = (props) => {
   };
 
   const mainGrid = createElement("div", {
-    class: "flex flex-col items-center justify-center gap-1 w-full"
+    class: "flex flex-col items-stretch justify-center gap-1"
   });
 
   for (let rowIndex = 0; rowIndex < grid.task.length; rowIndex++) {
     const row = grid.task[rowIndex];
 
     const rowContainerElement = createElement("div", {
-      class: "flex flex-row gap-1 w-full h-auto justify-center"
+      class: "flex flex-row gap-1 h-auto justify-center"
     });
 
     for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
@@ -102,7 +104,7 @@ export const createTakuzuGridComponent = (props) => {
           type: "button",
           class: classNames(
             "__game_grid_button",
-            "flex items-center justify-center aspect-square max-w-[64px] max-h-[64px] min-w-[24px] min-h-[24px] w-full h-full p-2",
+            "flex items-center justify-center aspect-square w-full h-full min-h-[32px] min-w-[32px] p-1 sm:p-2",
             "border-4 border-[#4C4F69]",
             "bg-[#EFF1F5] disabled:bg-gradient-to-t disabled:from-[#7287FD] disabled:to-[#8839EF]"
           ),
@@ -157,22 +159,6 @@ export const createTakuzuGridComponent = (props) => {
             button.classList.add("cursor-default");
           }
         );
-
-        // On cache les actions qui ne sont sensé
-        // être disponible qu'en jeu.
-        document.querySelectorAll(".__game_actions_ingame").forEach(
-          button => {
-            button.classList.add("hidden");
-          }
-        );
-          
-        // On montre les actions qui sont
-        // disponible dès que la partie est terminée.
-        document.querySelectorAll(".__game_actions_finish").forEach(
-          button => {
-            button.classList.remove("hidden");
-          }
-        );
       };
 
       /** Permet de supprimer le contenu d'une tuile. */
@@ -206,7 +192,7 @@ export const createTakuzuGridComponent = (props) => {
 
   createTimer();
   
-  return createElement("div", {
-    class: "w-full"
-  },  mainGrid);
+  return createElement("div", { class: "w-full sm:w-auto overflow-x-auto max-w-[70vh]"}, createElement("div", {
+    class: "flex justify-start items-center w-full sm:h-full sm:w-auto aspect-square flex-shrink-1"
+  }, mainGrid));
 }

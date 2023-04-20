@@ -70,7 +70,10 @@ class RenderSoloStartZenGameModal {
     });
 
     form_size_add.onclick = () => {
+      // On limite à 12x12 pour le maximum - à cause du temps de génération.
+      if (size_value === 12) return;
       size_value += 2;
+      
       form_size_input.value = size_value + "";
       updateFillFactorText();
     }
@@ -82,7 +85,10 @@ class RenderSoloStartZenGameModal {
     });
 
     form_size_remove.onclick = () => {
+      // On limite à 4x4 pour le minimum.
+      if (size_value === 4) return;
       size_value -= 2;
+
       form_size_input.value = size_value + "";
       updateFillFactorText();
     }
