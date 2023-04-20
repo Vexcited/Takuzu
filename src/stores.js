@@ -1,5 +1,6 @@
 // @ts-check
 
+import Takuzu from "../public/assets/takuzu/index.js";
 import { v4 as uuid } from "uuid";
 export const users = {};
 
@@ -26,3 +27,57 @@ export const getConnectedUser = (id) => {
     ...user
   };
 };
+
+export const games = {};
+
+/**
+ * @param {string} user1_id 
+ * @param {string} user2_id
+ * @param {number} [gridSize]
+ * @param {number} [gridFillFactor]
+ */
+export const createGame = (user1_id, user2_id, gridSize = 4, gridFillFactor = 0.4) => {
+  const id = uuid();
+
+  const grid = new Takuzu(gridSize);
+  grid.generate();
+  grid.prepare(gridFillFactor);
+
+  games[id] = {
+    size: gridSize,
+    fillFactor: gridFillFactor,
+
+    user1: {
+      id: user1_id,
+      grid: grid.clone()
+    },
+    
+    user2: {
+      id: user2_id,
+      grid: grid.clone()
+    }
+  };
+
+  return id;
+};
+
+/** @param {string} id */
+export const getGame = (id) => {
+  const game = games[id];
+  if (!game) return;
+
+  return {
+    size: game.size,
+    fillFactor: game.fillFactor,
+
+    user1: {
+      id: game.user1.id,
+      grid: game.user1.grid.task
+    },
+    
+    user2: {
+      id: game.user2.id,
+      grid: game.user2.grid.task
+    }
+  }
+}

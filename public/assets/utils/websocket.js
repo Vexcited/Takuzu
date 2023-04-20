@@ -3,6 +3,7 @@
 // import { rerenderUsersList } from "../render/pages/online.js";
 import { getConnectedUsers } from "./rest.js";
 import * as router from "../render/routes.js";
+import { navigate } from "../render/routes.js";
 
 export class Connection {
   /**
@@ -33,6 +34,17 @@ export class Connection {
   onlineUsers = {};
 
   /**
+   * @private
+   * @type {string | undefined}
+   */
+  waitingCommandName = undefined;
+  /**
+   * @private
+   * @type {((data: string) => unknown) | undefined}
+   */
+  waitingCommandNameCallback = undefined;
+
+  /**
    * @param {WebSocket} ws - Connexion au serveur WS.
    * @param {import("../types.js").UserConnected} user - Utilisateur connecté au serveur.
    * @param {Record<string, import("../types.js").UserConnected>} onlineUsers - Utilisateurs connectés au serveur.
@@ -43,6 +55,7 @@ export class Connection {
     this.onlineUsers = onlineUsers;
 
     this.ws.addEventListener("message", this.handler);
+    this.ws.addEventListener("close", () => window.location.reload());
   }
 
   /**
@@ -122,6 +135,29 @@ export class Connection {
    * @param {string} data 
    */
   send = (name, data) => this.ws.send(`${name}:${data}`);
+  
+  /**
+   * Envoyer la commande `name` au serveur avec les données `data`
+   * et attend la réponse du serveur pour la retourner.
+   * 
+   * @public
+   * @param {string} name 
+   * @param {string} data 
+   * @param {string} [responseName] - Le nom de la commande à attendre si différente de `name`. 
+   */
+  sendAndWait = async (name, data, responseName = name) => {
+    this.waitingCommandName = responseName;
+
+    const received_data = await new Promise((resolve) => {
+      this.send(name, data);
+      
+      this.waitingCommandNameCallback = (data) => {
+        resolve(data);
+      }
+    });
+
+    return received_data;
+  }
 
   /**
    * @private
@@ -149,6 +185,24 @@ export class Connection {
         // On refait le rendu de la liste dans la route `/online`.
         if (router.current.route === "/online") router.current.update();
         break;
+      }
+
+      case "invited": {
+        const invitation = JSON.parse(msg.data);
+        const should_join = confirm(`Vous avez invité à faire un duel avec ${this.onlineUsers[invitation.user_id].name} ! Rejoindre ?`);
+
+        if (!should_join) break;
+        navigate("/online/game", {}, { id: invitation.game_id });
+
+        break;
+      }
+
+      default: {
+        console.log("unhandled message", msg.command, this.waitingCommandName);
+        if (msg.command === this.waitingCommandName) {
+          this.waitingCommandNameCallback && this.waitingCommandNameCallback(msg.data);
+          break;
+        }
       }
     }
   }

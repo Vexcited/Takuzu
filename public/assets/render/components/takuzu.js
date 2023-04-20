@@ -46,7 +46,7 @@ const createOneSVG = (gradientInside = false) => {
 };
 
 /** @param {"0" | "1"} value */
-const createButtonContentFrom = (value, gradientInside = false) => {
+export const createButtonContentFrom = (value, gradientInside = false) => {
   if (value === "0") return createZeroSVG(gradientInside);
   else return createOneSVG(gradientInside);
 };
@@ -64,7 +64,7 @@ const createButtonContentFrom = (value, gradientInside = false) => {
 export const createTakuzuGridComponent = (props) => {
   const grid = new Takuzu(props.size);
   grid.generate();
-  grid.prepare();
+  grid.prepare(props.fillFactor);
 
   /** @type {NodeJS.Timer | null} */
   let __timer = null;

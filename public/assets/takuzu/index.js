@@ -5,9 +5,22 @@ import { generateGrid, prepareGrid } from "./generator.js";
 import { checkFullGrid } from "./checker.js";
 
 class Takuzu {
-  /** @param {number} size - La taille de la grille de Takuzu. */
-  constructor(size) {
+  /**
+   * @param {number} size - La taille de la grille de Takuzu.
+   * @param {{
+   *   grid: import("./types").TakuzuGrid,
+   *   task: import("./types").TakuzuGrid,
+   *   cache: string[]
+   * }} [clone_data] - Données du clone de la classe (utilisé sur la méthode `.clone()`)
+   */
+  constructor (size, clone_data) {
     this.size = size;
+
+    if (clone_data) {
+      this.grid = clone_data.grid;
+      this.task = clone_data.task;
+      this.cache = clone_data.cache;
+    }
   }
 
   /**
@@ -118,6 +131,16 @@ class Takuzu {
    * @returns {import("./types").TakuzuCheckResult}
    */
   check = () => checkFullGrid(this.task);
+
+  /**
+   * Permet de faire un clone de l'instance de la grille actuelle.
+   * @public
+   */
+  clone = () => new Takuzu(this.size, {
+    cache: this.cache,
+    grid: this.grid,
+    task: this.task
+  });
 }
 
 export default Takuzu;

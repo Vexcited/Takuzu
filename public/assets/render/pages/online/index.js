@@ -1,23 +1,27 @@
 // @ts-check
 
-import { navigate } from "../routes.js";
-import { useWS } from "../../stores/ws.js";
-import { createElement, renderToBody } from "../../utils/helpers.js";
+import { navigate } from "../../routes.js";
+import { useWS } from "../../../stores/ws.js";
+import { createElement, renderToBody } from "../../../utils/helpers.js";
 
-import { createButtonComponent } from "../components/button.js";
+import { createButtonComponent } from "../../components/button.js";
+import { useOnlineConfigGameModal } from "../../modals/onlineConfigGame.js";
 
-/** @type {Record<import("../../types.js").UserConnected["status"], string>} */
+/** @type {Record<import("../../../types.js").UserConnected["status"], string>} */
 const STATUS_TEXT = /** @type {const} */ ({
   idle: "Dans les menus",
   "in-game-online": "En partie en ligne",
   "in-game-solo": "En partie solo"
 });
 
-/** @param {import("../../types.js").UserConnected} user */
-const createOnlineUserComponent = (user) => createElement(
-  "div",
-  { class: "w-full flex flex-col gap-1" },
-  [
+/** @param {import("../../../types.js").UserConnected} user */
+const createOnlineUserComponent = (user) => {
+  const [createOnlineGameModal] = useOnlineConfigGameModal();
+  
+  const button = createElement("button", {
+    type: "button",
+    class: "w-full flex flex-col gap-1 border border-[#4C4F69] text-[#4C4F69] p-2"
+  }, [
     createElement(
       "h3",
       { class: "text-md font-medium" },
@@ -29,8 +33,12 @@ const createOnlineUserComponent = (user) => createElement(
       { class: "text-sm" },
       STATUS_TEXT[user.status]
     )
-  ]
-);
+  ]);
+
+  button.onclick = () => createOnlineGameModal(user.id);
+
+  return button;
+}
 
 class RenderPageOnline {
   /** @public */
@@ -125,7 +133,7 @@ class RenderPageOnline {
             class: "text-md"
           }, "Revenez plus tard...")
         ])
-      )
+      );
     }
   }
 
