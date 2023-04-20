@@ -50,9 +50,17 @@ class RenderPageOnline {
 
   /** @private */
   make = () => {
-    const title = createElement("h1", {
-      class: "text-3xl font-medium",
-    }, "Takuzu en ligne")
+    const [ws] = useWS();
+    
+    const connected_as_button = createButtonComponent({
+      color: "text",
+      children: `Connecté en tant que ${ws()?.user.name}`
+    });
+
+    connected_as_button.onclick = () => {
+      localStorage.removeItem("username");
+      window.location.reload();
+    }
 
     this.online_users_list = createElement("div", {
       class: "flex flex-col gap-4"
@@ -71,7 +79,18 @@ class RenderPageOnline {
 
     this.container = createElement("section", {
       class: "flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8",
-    }, [title, this.online_users_list, go_home_button]);
+    }, [
+      createElement("div", {
+        class: "flex flex-col gap-2 text-center"
+      }, [
+        createElement("h1", {
+          class: "text-3xl font-medium",
+        }, "Takuzu en ligne"),
+        connected_as_button
+      ]),
+      this.online_users_list,
+      createElement("div", { class: "w-full max-w-[600px]" }, go_home_button)
+    ]);
   }
 
   /** @public */

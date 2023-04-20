@@ -129,7 +129,8 @@ class RenderPageSolo {
           action: () => void 0
         })
       ]),
-      go_home_button]);
+      createElement("div", { class: "w-full max-w-[600px]" }, go_home_button)
+    ]);
   }
 
   /** @public */
