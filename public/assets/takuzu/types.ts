@@ -1,3 +1,5 @@
+import type { TileValues } from "./constants";
+
 /**
  * - `balance` (règle 1): autant de 1 que de 0 sur chaque ligne et sur chaque colonne.
  * - `triple` (règle 2): pas plus de 2 chiffres identiques côte à côte.
@@ -16,3 +18,5 @@ export type TakuzuCheckResult = (
     position: string[];
   }
 );
+
+export type TakuzuGrid = (typeof TileValues[keyof typeof TileValues])[][];

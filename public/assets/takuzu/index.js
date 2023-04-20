@@ -20,14 +20,14 @@ class Takuzu {
   /**
    * La grille générée, complète.
    * @public
-   * @type {string[][]}
+   * @type {import("./types").TakuzuGrid}
    */
   grid;
 
   /**
    * L'état actuel de la grille, sur laquelle on va jouer.
    * @public
-   * @type {string[][]}
+   * @type {import("./types").TakuzuGrid}
    */
   task;
   
@@ -43,7 +43,7 @@ class Takuzu {
    * @public
    */
   generate () {
-    /** @type {string[][] | null | undefined} */
+    /** @type {import("./types").TakuzuGrid | null | undefined} */
     let grid;
     
     /** @type {import("./types").TakuzuCheckResult | undefined} */
@@ -104,7 +104,10 @@ class Takuzu {
   undo = () => {
     if (!this.cache.length) return;
     const prevStep = this.cache[this.cache.length - 1].split("-");
-    this.task[+prevStep[0]][+prevStep[1]] = prevStep[2];
+    this.task[+prevStep[0]][+prevStep[1]] = /** @type {import("./types").TakuzuGrid[number][number]} */ (
+      prevStep[2]
+    );
+    
     this.cache.pop();
   };
 

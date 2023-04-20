@@ -9,17 +9,18 @@ import {
   getRandomNumber,
 } from "../utils/helpers.js";
 
-/** @param {string[]} grid */
+/** @param {import("./types").TakuzuGrid[number]} grid */
 const splitGridIntoTiles = (grid) => {
-  /** @type {string[][]} */  
+  /** @type {import("./types").TakuzuGrid} */  
   const splitted_grid = [];
   
   for (let i = 0; i < grid.length; i++) {
-    /** @type {string[]} */
+    /** @type {import("./types").TakuzuGrid[number]} */
     const splitted_row = [];
 
     for (let j = 0; j < grid[i].length; j++) {
-      splitted_row.push(grid[i][j]);
+      const value = /** @type {import("./types").TakuzuGrid[number][number]} */ (grid[i][j]);
+      splitted_row.push(value);
     }
 
     splitted_grid.push(splitted_row);
@@ -30,17 +31,17 @@ const splitGridIntoTiles = (grid) => {
 
 /**
  * @param {number} size - La taille de la grille à générer.
- * @returns {string[][] | null}
+ * @returns {import("./types").TakuzuGrid | null}
  */
 export const generateGrid = (size) => {
-  /** @type {string[]} */  
+  /** @type {import("./types").TakuzuGrid[number]} */  
   const grid = [];
   const columns = arrayFromLength(size);
   let rows = generateRows(size);
 
   /** @type {number} */
   let index;
-  /** @type {string} */
+  /** @type {import("./types").TakuzuGrid[number][number]} */
   let row;
 
   for (let i = 0; i < size; i++) {
@@ -83,12 +84,14 @@ export const generateGrid = (size) => {
 
 /** @param {number} size */
 const generateRows = (size) => {
-  /** @type {string[]} */  
+  /** @type {import("./types").TakuzuGrid[number]} */  
   const rows = [];
   const max = 2 ** size;
 
   for (let i = 0; i < max; i++) {
-    const str = i.toString(2).padStart(size, TileValues.ZERO).toString();
+    const str = /** @type {import("./types").TakuzuGrid[number][number]} */ (
+      i.toString(2).padStart(size, TileValues.ZERO).toString()
+    );
 
     if (
       str.includes(TileValues.ZERO.repeat(3)) ||
@@ -131,7 +134,7 @@ const defineNextRow = (columns) => {
 }
 
 /**
- * @param {string[]} rows 
+ * @param {import("./types").TakuzuGrid[number]} rows 
  * @param {string} pattern 
  */
 const filteringRows = (rows, pattern) => {
@@ -152,11 +155,10 @@ const filteringRows = (rows, pattern) => {
 }
 
 /**
- * @param {string[][]} grid 
+ * @param {import("./types").TakuzuGrid} grid 
  * @param {number} fillFactor - Un facteur qui défini à combien de % la grille sera remplie. 
  */
 export const prepareGrid = (grid, fillFactor) => {
-  /** @type {string[][]} */
   const prepared_grid = [...grid];
 
   const gridSize = grid.length;

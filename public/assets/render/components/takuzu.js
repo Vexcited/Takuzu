@@ -1,5 +1,6 @@
 // @ts-check
 
+import { TileValues } from "../../takuzu/constants.js";
 
 import Takuzu from "../../takuzu/index.js";
 import { classNames, createElement } from "../../utils/helpers.js";
@@ -47,23 +48,40 @@ const createOneSVG = (gradientInside = false) => {
 /** @param {"0" | "1"} value */
 const createButtonContentFrom = (value, gradientInside = false) => {
   if (value === "0") return createZeroSVG(gradientInside);
-  else if (value === "1") return createOneSVG(gradientInside);
+  else return createOneSVG(gradientInside);
 };
 
 /**
  * @param {Object} props
  * @param {number} props.size
  * @param {number} [props.fillFactor]
+ * @param {HTMLElement} props.timerElement
+ * @param {HTMLElement} props.hintsElement
  * @returns {HTMLDivElement}
  */
-export const createTakuzuGridComponent = (props = {
-  size: 4,
-  fillFactor: 0.5
-}) => {
+export const createTakuzuGridComponent = (props) => {
   const grid = new Takuzu(props.size);
-  const solvedGrid = grid.generate();
+  grid.generate();
   grid.prepare();
 
+  /** @type {NodeJS.Timer | null} */
+  let __timer = null;
+  let __timer_ms = 0;
+
+  const createTimer = () => {
+    const updateEveryMS = 1000;
+    
+    __timer_ms = 0;
+    __timer = setInterval(() => {
+      __timer_ms += updateEveryMS;
+
+      const date = new Date(0);
+      date.setMilliseconds(__timer_ms);
+
+      const formated = date.toISOString().substring(11, 19);
+      props.timerElement.innerText = formated;
+    }, updateEveryMS);
+  };
 
   const mainGrid = createElement("div", {
     class: "flex flex-col items-center justify-center gap-1 w-full"
@@ -79,21 +97,22 @@ export const createTakuzuGridComponent = (props = {
     for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
       const value = row[columnIndex];
       
-      const rowItemElement = createElement("button", {
-        type: "button",
-        class: classNames(
-        "__game_grid_button",
-          "flex items-center justify-center aspect-square max-w-[64px] max-h-[64px] min-w-[24px] min-h-[24px] w-full h-full p-2",
-          "border-4 border-[#4C4F69]",
-          "bg-[#EFF1F5] disabled:bg-gradient-to-t disabled:from-[#7287FD] disabled:to-[#8839EF]"
-        ),
+      const rowItemElement = createElement("button",
+        {
+          type: "button",
+          class: classNames(
+            "__game_grid_button",
+            "flex items-center justify-center aspect-square max-w-[64px] max-h-[64px] min-w-[24px] min-h-[24px] w-full h-full p-2",
+            "border-4 border-[#4C4F69]",
+            "bg-[#EFF1F5] disabled:bg-gradient-to-t disabled:from-[#7287FD] disabled:to-[#8839EF]"
+          ),
 
-        "data-row-index": rowIndex.toString(),
-        "data-column-index": columnIndex.toString(), 
-        "data-value": value,
-        disabled: value !== TileValues.EMPTY
-      },
-      value === TileValues.EMPTY ? "" : createButtonContentFrom(value)
+          "data-row-index": rowIndex.toString(),
+          "data-column-index": columnIndex.toString(), 
+          "data-value": value,
+          disabled: (value !== TileValues.EMPTY) + ""
+        },
+        value === TileValues.EMPTY ? "" : createButtonContentFrom(value)
       );
 
       const updateContent = () => {
@@ -101,7 +120,7 @@ export const createTakuzuGridComponent = (props = {
         const new_value = (old_value === TileValues.ZERO) ? TileValues.ONE : TileValues.ZERO;
 
         grid.change(rowIndex, columnIndex, new_value);
-        rowItemElement.innerHTML = new_value === TileValues.EMPTY ? "" : createButtonContentFrom(new_value, true);
+        rowItemElement.innerHTML = createButtonContentFrom(new_value, true);
         rowItemElement.dataset.value = new_value;
         
         let isFull = true;
@@ -114,20 +133,21 @@ export const createTakuzuGridComponent = (props = {
           }
         }
 
-        game_hints.innerText = "";
+        props.hintsElement.innerText = "";
         if (!isFull) return;
 
         const check = grid.check();
         if (check.error) {
-          game_hints.innerText = check.message;
+          props.hintsElement.innerText = check.message;
           return;
         }
 
-        clearInterval(__timer);
-        game_hints.innerText = "Vous avez terminé!";
+        if (__timer) clearInterval(__timer);
+        props.hintsElement.innerText = "Vous avez terminé!";
         
         document.querySelectorAll(".__game_grid_button").forEach(
-          button => {
+          (raw_button) => {
+            const button = /** @type {HTMLElement} */ (raw_button);
             // On désactive les events sur les boutons.
             button.onclick = () => null;
             button.oncontextmenu = () => null;
@@ -159,7 +179,7 @@ export const createTakuzuGridComponent = (props = {
         grid.change(rowIndex, columnIndex, TileValues.EMPTY);
         rowItemElement.dataset.value = TileValues.EMPTY;
         rowItemElement.innerHTML = "";
-        game_hints.innerText = "";
+        props.hintsElement.innerText = "";
       }
 
       rowItemElement.onclick = (event) => {
@@ -175,7 +195,7 @@ export const createTakuzuGridComponent = (props = {
       rowItemElement.oncontextmenu = (event) => {
         event.preventDefault();
         removeContent();
-      }
+      };
 
       rowContainerElement.appendChild(rowItemElement);
     }
