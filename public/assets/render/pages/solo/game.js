@@ -1,6 +1,7 @@
 // @ts-check
 
 import { useWS } from "../../../stores/ws.js";
+import { ERRORS } from "../../../takuzu/constants.js";
 import { renderToBody, createElement } from "../../../utils/helpers.js";
 import { createButtonComponent } from "../../components/button.js";
 import { createTakuzuGridComponent } from "../../components/takuzu.js";
@@ -33,13 +34,13 @@ class RenderPageSoloGame {
     if (connection) connection.send("status", JSON.stringify({
       online: false,
       in_game: true,
-      
+
       mode: "zen",
       size: state.size,
       fillFactor: state.fillFactor
     }));
 
-    const hintsElement = createElement("p");
+    const hintsElement = createElement("p", { class: "text-center"}, ERRORS.FILL_GRID_FIRST);
     const timerElement = createElement("h2", { class: "font-medium text-xl" }, "00:00:00");
 
     this.container = createElement("section", {
@@ -54,18 +55,24 @@ class RenderPageSoloGame {
       }),
 
       createElement("div", {
-        class: "flex flex-col gap-3 items-center justify-center"
+        class: "flex flex-col gap-3 w-full max-w-[600px] items-center justify-center"
       }, [
-        createButtonComponent({
-          type: "button",
-          color: "text",
-          children: "Quitter"
-        }),
-        createButtonComponent({
-          type: "button",
-          color: "primary",
-          children: "Nouvelle grille"
-        })
+        hintsElement,
+
+        createElement("div", {
+          class: "w-full flex gap-2 flex-col-reverse sm:flex-row items-center justify-center"
+        }, [
+          createButtonComponent({
+            type: "button",
+            color: "text",
+            children: "Quitter"
+          }),
+          createButtonComponent({
+            type: "button",
+            color: "primary",
+            children: "Nouvelle grille"
+          })
+        ])
       ])
     ]);
   }

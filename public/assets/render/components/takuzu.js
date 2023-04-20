@@ -1,6 +1,6 @@
 // @ts-check
 
-import { TileValues } from "../../takuzu/constants.js";
+import { ERRORS, TileValues } from "../../takuzu/constants.js";
 
 import Takuzu from "../../takuzu/index.js";
 import { classNames, createElement } from "../../utils/helpers.js";
@@ -110,10 +110,11 @@ export const createTakuzuGridComponent = (props) => {
           "data-row-index": rowIndex.toString(),
           "data-column-index": columnIndex.toString(), 
           "data-value": value,
-          disabled: (value !== TileValues.EMPTY) + ""
-        },
-        value === TileValues.EMPTY ? "" : createButtonContentFrom(value)
+          disabled: (value !== TileValues.EMPTY) ? "true" : undefined
+        }
       );
+
+      rowItemElement.innerHTML = value === TileValues.EMPTY ? "" : createButtonContentFrom(value);
 
       const updateContent = () => {
         const old_value = rowItemElement.dataset.value;
@@ -133,7 +134,7 @@ export const createTakuzuGridComponent = (props) => {
           }
         }
 
-        props.hintsElement.innerText = "";
+        props.hintsElement.innerText = ERRORS.FILL_GRID_FIRST;
         if (!isFull) return;
 
         const check = grid.check();
@@ -179,7 +180,7 @@ export const createTakuzuGridComponent = (props) => {
         grid.change(rowIndex, columnIndex, TileValues.EMPTY);
         rowItemElement.dataset.value = TileValues.EMPTY;
         rowItemElement.innerHTML = "";
-        props.hintsElement.innerText = "";
+        props.hintsElement.innerText = ERRORS.FILL_GRID_FIRST;
       }
 
       rowItemElement.onclick = (event) => {
