@@ -83,9 +83,11 @@ class RenderPageOnline {
     this.online_users_list.innerHTML = "";
     if (!connection) return;
 
+    const users = Object.values(connection.onlineUsers);
+
     // On retire 1 car on ne veut pas compter nous même.
-    if (connection.onlineUsers.length - 1 > 0) {
-      for (const user of connection.onlineUsers) {
+    if (users.length - 1 > 0) {
+      for (const user of users) {
         if (user.id === connection.user.id) continue;
     
         const element = createOnlineUserComponent(user);

@@ -28,14 +28,14 @@ export class Connection {
    * On peut forcer la mise à jour en envoyant `connectedUsers:true` au serveur.
    * 
    * @public
-   * @type {Array<import("../types").UserConnected>}
+   * @type {Record<string, import("../types.js").UserConnected>}
    */
-  onlineUsers = [];
+  onlineUsers = {};
 
   /**
    * @param {WebSocket} ws - Connexion au serveur WS.
    * @param {import("../types.js").UserConnected} user - Utilisateur connecté au serveur.
-   * @param {Array<import("../types.js").UserConnected>} onlineUsers - Utilisateurs connectés au serveur.
+   * @param {Record<string, import("../types.js").UserConnected>} onlineUsers - Utilisateurs connectés au serveur.
    */
   constructor (ws, user, onlineUsers) {
     this.ws = ws;
@@ -131,15 +131,19 @@ export class Connection {
     const msg = Connection.parse(raw_msg);
 
     switch (msg.command) {
+      case "connected_user_update":
       case "new_connected_user": {
-        this.onlineUsers.push(JSON.parse(msg.data));
+        const user = JSON.parse(msg.data);
+        this.onlineUsers[user.id] = user;
+
         // On refait le rendu de la liste dans la route `/online`.
         if (router.current.route === "/online") router.current.update();
         break;
       }
 
       case "disconnected_user": {
-        this.onlineUsers = this.onlineUsers.filter(user => user.id !== msg.data);
+        delete this.onlineUsers[msg.data];
+
         // On refait le rendu de la liste dans la route `/online`.
         if (router.current.route === "/online") router.current.update();
         break;

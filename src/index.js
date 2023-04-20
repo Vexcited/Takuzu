@@ -60,6 +60,20 @@ app.ws("/api/ws", (ws) => {
         
         break;
       }
+
+      case "status": {
+        const status = JSON.parse(data);
+        
+        if (!status.in_game) users[user_id].status = "idle";
+        else users[user_id].status = `in-game-${status.online ? "online" : "solo"}`;
+        
+        // On notifie les autres utilisateurs du changement.
+        ws_client.clients.forEach((client) => {
+          client.send(`connected_user_update:${JSON.stringify(getConnectedUser(user_id))}`);
+        });
+        
+        break;
+      }
     }
   });
 });
