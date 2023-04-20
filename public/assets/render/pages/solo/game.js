@@ -43,6 +43,29 @@ class RenderPageSoloGame {
     const hintsElement = createElement("p", { class: "text-center"}, ERRORS.FILL_GRID_FIRST);
     const timerElement = createElement("h2", { class: "font-medium text-xl" }, "00:00:00");
 
+    const actionResetElement = createButtonComponent({
+      type: "button",
+      color: "primary",
+      children: "Nouvelle grille"
+    });
+
+    actionResetElement.onclick = () => {
+      navigate("/solo/game", state);
+    }
+
+    const actionQuitElement = createButtonComponent({
+      type: "button",
+      color: "text",
+      children: "Quitter"
+    });
+
+    actionQuitElement.onclick = () => {
+      if (connection) connection.send("status", JSON.stringify({
+        in_game: false
+      }));
+      navigate("/solo")
+    }
+
     this.container = createElement("section", {
       class: "flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8"
     }, [
@@ -62,16 +85,8 @@ class RenderPageSoloGame {
         createElement("div", {
           class: "w-full flex gap-2 flex-col-reverse sm:flex-row items-center justify-center"
         }, [
-          createButtonComponent({
-            type: "button",
-            color: "text",
-            children: "Quitter"
-          }),
-          createButtonComponent({
-            type: "button",
-            color: "primary",
-            children: "Nouvelle grille"
-          })
+          actionResetElement,
+          actionQuitElement
         ])
       ])
     ]);
