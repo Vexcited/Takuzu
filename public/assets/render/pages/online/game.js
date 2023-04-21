@@ -17,6 +17,21 @@ class RenderPageOnlineGame {
   /** @type {WebSocket} */
   game_ws;
 
+  /**
+   * @type {{
+   *   size: number,
+   *   fillFactor: number,
+   *   user1: { id: string, grid: import("../../../takuzu/types.js").TakuzuGrid },
+   *   user2: { id: string, grid: import("../../../takuzu/types.js").TakuzuGrid },
+   * }}
+   */
+  game_data;
+
+  /** @type {"user1" | "user2"} */
+  user_index;
+  /** @type {"user1" | "user2"} */
+  opponent_index;
+
   constructor () {
     const url = new URL(window.location.href);
     const game_id = url.searchParams.get("id");
@@ -26,26 +41,45 @@ class RenderPageOnlineGame {
       throw new Error("[RenderPageOnlineGame] Pas d'ID de partie donné.");
     }
 
+    const [ws] = useWS();
+    const connection = ws();
+    if (!connection) {
+      window.location.replace("/");
+      throw new Error("Pas de connexion au serveur.");
+    }
+
     (async () => {
-      const endpoint = "/api/games/" + game_id;
+      try {
+        const endpoint = "/api/games/" + game_id;
 
-      const response = await fetch(endpoint)
-      const data = await response.json();
-
-      this.make(data);
-
-      const url = new URL(window.location.href);
-      url.pathname = endpoint;
-      url.protocol = url.protocol.replace("http", "ws");
-    
-      this.game_ws = new WebSocket(url);
-
-      const [ws] = useWS();
-      const connection = ws();
-      if (!connection) throw new Error("Pas de connexion au serveur WS établie.");
-
-      this.game_ws.onopen = () => this.game_ws.send(`join:${connection.user.id}`);
-      renderToBody(this.container);
+        const response = await fetch(endpoint)
+        const data = await response.json();
+  
+        this.game_data = data;
+        if (this.game_data.user1.id === connection.user.id) {
+          this.user_index = "user1";
+          this.opponent_index = "user2";
+        }
+        else {
+          this.user_index = "user2";
+          this.opponent_index = "user1";
+        }
+  
+        this.make();
+  
+        const url = new URL(window.location.href);
+        url.pathname = endpoint;
+        url.protocol = url.protocol.replace("http", "ws");
+      
+        this.game_ws = new WebSocket(url);
+  
+        this.game_ws.onopen = () => this.game_ws.send(`join:${connection.user.id}`);
+        renderToBody(this.container);
+      }
+      catch (e) {
+        navigate("/online");
+        throw new Error("[RenderPageOnlineGame] L'ID de partie n'as pas été trouvée.");
+      }
     })();
   }
 
@@ -159,16 +193,11 @@ class RenderPageOnlineGame {
 
   /**
    * @private
-   * @param {{
-   *   size: number,
-   *   fillFactor: number,
-   *   user1: { id: string, grid: import("../../../takuzu/types.js").TakuzuGrid },
-   *   user2: { id: string, grid: import("../../../takuzu/types.js").TakuzuGrid },
-   * }} data
    */
-  make = (data) => {
+  make = () => {
     const [ws] = useWS();
     const connection = ws();
+
     if (connection) connection.send("status", JSON.stringify({
       online: true,
       in_game: true
@@ -189,13 +218,16 @@ class RenderPageOnlineGame {
       navigate("/online")
     }
 
-    const userGrid = data.user1.id === connection?.user.id ? data.user1.grid : data.user2.grid;
-
     this.container = createElement("section", {
       class: "flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8"
     }, [
       timerElement,
-      this.createTakuzuGridElement(userGrid),
+      createElement("div", {
+        class: "flex gap-8"
+      }, [
+        this.createTakuzuGridElement(this.game_data[this.user_index].grid),
+        this.createTakuzuGridElement(this.game_data[this.opponent_index].grid),
+      ]),
 
       createElement("div", {
         class: "flex flex-col gap-3 w-full max-w-[400px] items-center justify-center"
@@ -214,7 +246,7 @@ class RenderPageOnlineGame {
 
   /** @public */
   destroy = () => {
-    this.container.remove();
+    this.container && this.container.remove();
   }
 }
 

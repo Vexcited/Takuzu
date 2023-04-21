@@ -122,11 +122,13 @@ app.ws("/api/ws", (ws) => {
           game_config.fillFactor
         )
 
+        // On notifie le joueur qu'il a été invité.
         user_to_invite_ws.send(`invited:${JSON.stringify({
           user_id,
           game_id
         })}`);
 
+        // On notifie le créateur de l'invitation que la partie a bien été créee.
         ws.send(`invite:${game_id}`);
       }
     }

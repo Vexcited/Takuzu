@@ -198,7 +198,6 @@ export class Connection {
       }
 
       default: {
-        console.log("unhandled message", msg.command, this.waitingCommandName);
         if (msg.command === this.waitingCommandName) {
           this.waitingCommandNameCallback && this.waitingCommandNameCallback(msg.data);
           break;
