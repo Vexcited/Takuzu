@@ -49,11 +49,13 @@ export const createGame = (user1_id, user2_id, gridSize = 4, gridFillFactor = 0.
 
     user1: {
       id: user1_id,
+      ws: null,
       grid: grid.clone()
     },
     
     user2: {
       id: user2_id,
+      ws: null,
       grid: grid.clone()
     }
   };
@@ -72,11 +74,13 @@ export const getGame = (id) => {
 
     user1: {
       id: game.user1.id,
+      joined: game.user1.ws !== null,
       grid: game.user1.grid.task
     },
     
     user2: {
       id: game.user2.id,
+      joined: game.user2.ws !== null,
       grid: game.user2.grid.task
     }
   }

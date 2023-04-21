@@ -39,7 +39,7 @@ class RenderOnlineConfigGameModal {
   /** @private */
   build = () => {
     this.userTitleElement = createElement(
-      "h2", { class: "text-2xl font-medium" }
+      "h2", { class: "text-2xl font-medium w-full truncate" }
     );
 
     const form_size_input = createElement("input", {

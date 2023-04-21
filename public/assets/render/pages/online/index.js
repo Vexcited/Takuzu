@@ -20,11 +20,11 @@ const createOnlineUserComponent = (user) => {
   
   const button = createElement("button", {
     type: "button",
-    class: "w-full flex flex-col gap-1 border border-[#4C4F69] text-[#4C4F69] p-2"
+    class: "w-full flex flex-col text-left border border-[#4C4F69] text-[#4C4F69] py-2 px-4 rounded-lg hover:bg-[#7287fd]/10 hover:border hover:border-[#7287fd] transition-colors"
   }, [
     createElement(
       "h3",
-      { class: "text-md font-medium" },
+      { class: "text-lg font-semibold truncate w-full" },
       user.name
     ),
 
@@ -32,7 +32,14 @@ const createOnlineUserComponent = (user) => {
       "p",
       { class: "text-sm" },
       STATUS_TEXT[user.status]
-    )
+    ),
+
+    createElement(
+      "p",
+      { class: "mt-1 text-xs opacity-50" },
+      user.id
+    ),
+
   ]);
 
   button.onclick = () => createOnlineGameModal(user.id);
@@ -62,6 +69,7 @@ class RenderPageOnline {
     
     const connected_as_button = createButtonComponent({
       color: "text",
+      maxWidth: "350px",
       children: `Connecté en tant que ${ws()?.user.name}`
     });
 
@@ -71,7 +79,7 @@ class RenderPageOnline {
     }
 
     this.online_users_list = createElement("div", {
-      class: "flex flex-col gap-4"
+      class: "flex flex-col gap-4 w-full max-w-[400px]"
     });
 
     const go_home_button = createButtonComponent({
@@ -89,7 +97,7 @@ class RenderPageOnline {
       class: "flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8",
     }, [
       createElement("div", {
-        class: "flex flex-col gap-2 text-center"
+        class: "flex flex-col gap-2 text-center w-full"
       }, [
         createElement("h1", {
           class: "text-3xl font-medium",

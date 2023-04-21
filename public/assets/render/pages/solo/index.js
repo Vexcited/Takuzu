@@ -85,6 +85,7 @@ class RenderPageSolo {
 
     const connected_as_button = createButtonComponent({
       color: "text",
+      maxWidth: "350px",
       children: `Connecté en tant que ${ws()?.user.name}`
     });
 
@@ -97,7 +98,7 @@ class RenderPageSolo {
       class: "flex flex-col items-center justify-between gap-8 w-full min-h-screen h-full p-8",
     }, [
       createElement("div", {
-        class: "flex flex-col gap-2 text-center"
+        class: "flex flex-col gap-2 text-center w-full"
       }, [
         createElement("h1", {
           class: "text-3xl font-medium",

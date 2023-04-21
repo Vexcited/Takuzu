@@ -38,11 +38,18 @@ export class Connection {
    * @type {string | undefined}
    */
   waitingCommandName = undefined;
+  
   /**
    * @private
    * @type {((data: string) => unknown) | undefined}
    */
   waitingCommandNameCallback = undefined;
+
+  /**
+   * @private
+   * @type {((command: string, message: string) => unknown) | undefined}
+   */
+  gameCommandCallback = undefined;
 
   /**
    * @param {WebSocket} ws - Connexion au serveur WS.
@@ -160,6 +167,15 @@ export class Connection {
   }
 
   /**
+   * @param {string} game_id
+   * @param {(command: string, message: string) => unknown} handler
+   */
+  connectToGame = (game_id, handler) => {
+    this.send("join", game_id);
+    this.gameCommandCallback = handler;
+  }
+
+  /**
    * @private
    * @param {MessageEvent} event
    */
@@ -194,6 +210,12 @@ export class Connection {
         if (!should_join) break;
         navigate("/online/game", {}, { id: invitation.game_id });
 
+        break;
+      }
+
+      case "joined":
+      case "game_action": {
+        this.gameCommandCallback && this.gameCommandCallback(msg.command, msg.data);
         break;
       }
 
