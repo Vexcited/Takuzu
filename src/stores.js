@@ -9,7 +9,8 @@ export const createUser = (username) => {
   const id = uuid();
   users[id] = {
     name: username,
-    status: "idle"
+    status: "idle",
+    current_online_game_id: null
   };
 
   return id;

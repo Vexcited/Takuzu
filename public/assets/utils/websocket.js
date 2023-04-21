@@ -214,7 +214,8 @@ export class Connection {
       }
 
       case "joined":
-      case "game_action": {
+      case "game_action":
+      case "game_win": {
         this.gameCommandCallback && this.gameCommandCallback(msg.command, msg.data);
         break;
       }

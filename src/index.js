@@ -9,6 +9,8 @@ import {
   games, createGame, getGame
 } from "./stores.js";
 
+import { TileValues } from "../public/assets/takuzu/constants.js";
+
 // Source: <https://flaviocopes.com/fix-dirname-not-defined-es-module-scope/>
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -127,6 +129,8 @@ app.ws("/api/ws", (ws) => {
           user_index = "spectator";
         }
 
+        users[user_id].current_online_game_id = game_id;
+
         // On notifie les participants à la partie d'une connexion.
         [game.user1.ws, game.user2.ws].filter(Boolean)
           .forEach(client => client.send(`joined:${JSON.stringify({
@@ -156,10 +160,16 @@ app.ws("/api/ws", (ws) => {
         }
         else break;
 
-        game[user_index].grid.change(rowIndex, columnIndex, value);
+        const user_grid = game[user_index].grid;
 
-        // On notifie les participants à la partie d'un changement de grille.
-        [game.user1.ws, game.user2.ws]
+        // On effectue la modification dans la grille.
+        user_grid.change(rowIndex, columnIndex, value);
+
+        // Les participants à la partie.
+        const game_users_ws = [game.user1.ws, game.user2.ws]
+          
+        // On notifie les participants d'un changement de grille.
+        game_users_ws
           .filter(
             // On n'averti pas l'utilisateur qui a effectué le changement - inutile.
             client => client && client.user_id !== user_id
@@ -169,6 +179,35 @@ app.ws("/api/ws", (ws) => {
             is: user_index,
             grid_change: { rowIndex, columnIndex, value }
           })}`));
+
+        // On vérifie si la grille est remplie avant de lancer une vérification.
+        let isFull = true;
+        for (const row of user_grid.task) {
+          if (!isFull) break;
+          for (const column_item of row) {
+            if (column_item === TileValues.EMPTY) {
+              isFull = false;
+              break;
+            }
+          }
+        }
+
+        if (!isFull) return;
+        const check = user_grid.check();
+        if (check.error) return;
+
+        // S'il n'y a pas d'erreur, celà signifie que le joueur à gagné.
+        game_users_ws.forEach(client => {
+          client.send(`game_win:${JSON.stringify({
+            user_id,
+            is: user_index
+          })}`);
+
+          users[client.user_id].current_online_game_id = null;
+        });
+
+        delete games[game_id];
+        break;
       }
     }
   });

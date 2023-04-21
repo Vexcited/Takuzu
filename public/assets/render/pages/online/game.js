@@ -108,6 +108,12 @@ class RenderPageOnlineGame {
 
         break;
       }
+
+      case "game_win": {
+        const { is } = JSON.parse(data);
+        alert(`${is === this.user_index ? "Vous avez gagné!" : "Vous avez perdu..."} Retour à la page d'accueil.`);
+        navigate("/online");
+      }
     }
 
     this.update();
@@ -178,18 +184,20 @@ class RenderPageOnlineGame {
           const old_value = rowItemElement.dataset.value;
           const new_value = (old_value === TileValues.ZERO) ? TileValues.ONE : TileValues.ZERO;
 
-          action(rowIndex, columnIndex, new_value);
           rowItemElement.innerHTML = createButtonContentFrom(new_value, true);
           rowItemElement.dataset.value = new_value;
+
+          action(rowIndex, columnIndex, new_value);
         };
 
         /** Permet de supprimer le contenu d'une tuile. */
         const removeContent = () => {
           if (this.user_index !== isForUser) return;
 
-          action(rowIndex, columnIndex, TileValues.EMPTY);
           rowItemElement.dataset.value = TileValues.EMPTY;
           rowItemElement.innerHTML = "";
+          
+          action(rowIndex, columnIndex, TileValues.EMPTY);
         }
 
         rowItemElement.onclick = (event) => {
@@ -315,6 +323,12 @@ class RenderPageOnlineGame {
 
   /** @public */
   destroy = () => {
+    const [ws] = useWS();
+    const connection = ws();
+    if (connection) connection.send("status", JSON.stringify({
+      in_game: false
+    }));
+
     this.container && this.container.remove();
   }
 }

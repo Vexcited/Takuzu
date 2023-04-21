@@ -59,12 +59,7 @@ class RenderPageSoloGame {
       children: "Quitter"
     });
 
-    actionQuitElement.onclick = () => {
-      if (connection) connection.send("status", JSON.stringify({
-        in_game: false
-      }));
-      navigate("/solo")
-    }
+    actionQuitElement.onclick = () => navigate("/solo");
 
     this.container = createElement("section", {
       class: "flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8"
@@ -97,7 +92,13 @@ class RenderPageSoloGame {
 
   /** @public */
   destroy = () => {
-    this.container.remove();
+    const [ws] = useWS();
+    const connection = ws();
+    if (connection) connection.send("status", JSON.stringify({
+      in_game: false
+    }));
+
+    this.container && this.container.remove();
   }
 }
 
