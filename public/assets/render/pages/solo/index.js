@@ -125,7 +125,7 @@ class RenderPageSolo {
         createModeButtonComponent({
           title: "Gridz",
           color: "primary",
-          description: "Complétez un certain nombre de grilles le plus rapidement possbile!",
+          description: "Complétez un certain nombre de grilles le plus rapidement possible!",
           highscore: "23s",
           action: () => void 0
         })
