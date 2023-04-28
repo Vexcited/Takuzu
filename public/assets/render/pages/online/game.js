@@ -31,6 +31,39 @@ class RenderPageOnlineGame {
   /** @type {"user1" | "user2"} */
   opponent_index;
 
+  /** @type {HTMLElement} */
+  timer_element;
+
+  /** @type {NodeJS.Timer | null} */
+  __timer = null;
+  __timer_ms = 0;
+
+  /**
+   * Permet de savoir si la partie a commencé ou pas.
+   * Elle commence dès que les deux joueurs sont dans la partie.
+   * @private
+   */
+  game_ready = false;
+
+  /**
+   * Création du timer pour compter le temps de jeu. 
+   * @private
+   */
+  createTimer = () => {
+    const updateEveryMS = 1_000;
+    
+    this.__timer_ms = 0;
+    this.__timer = setInterval(() => {
+      this.__timer_ms += updateEveryMS;
+
+      const date = new Date(0);
+      date.setMilliseconds(this.__timer_ms);
+
+      const formated = date.toISOString().substring(11, 19);
+      this.timer_element.innerText = formated;
+    }, updateEveryMS);
+  };
+
   constructor () {
     const url = new URL(window.location.href);
     const game_id = url.searchParams.get("id");
@@ -84,8 +117,6 @@ class RenderPageOnlineGame {
    * @param {string} data
    */
   game_connection_handler = (command, data) => {
-    console.log("got game cmd", command, data);
-
     switch (command) {
       case "joined": {
         const { is } = JSON.parse(data);
@@ -94,6 +125,13 @@ class RenderPageOnlineGame {
         }
         else if (is === this.user_index) {
           this.game_data[this.user_index].joined = true;
+        }
+
+        // On lance le timer une fois que les deux joueurs
+        // ont rejoint la partie.
+        if (this.game_data[this.user_index].joined && this.game_data[this.opponent_index].joined) {
+          this.createTimer();
+          this.game_ready = true;
         }
         
         break;
@@ -110,7 +148,9 @@ class RenderPageOnlineGame {
       }
 
       case "game_win": {
+        if (this.__timer) clearInterval(this.__timer);
         const { is } = JSON.parse(data);
+        
         alert(`${is === this.user_index ? "Vous avez gagné!" : "Vous avez perdu..."} Retour à la page d'accueil.`);
         navigate("/online");
       }
@@ -125,25 +165,6 @@ class RenderPageOnlineGame {
    * @param {(rowIndex: number, columnIndex: number, value: "1" | "0" | ".") => unknown} action
    */
   createTakuzuGridElement = (grid, isForUser, action) => {
-    // /** @type {NodeJS.Timer | null} */
-    // let __timer = null;
-    // let __timer_ms = 0;
-
-    // const createTimer = () => {
-    //   const updateEveryMS = 1000;
-      
-    //   __timer_ms = 0;
-    //   __timer = setInterval(() => {
-    //     __timer_ms += updateEveryMS;
-
-    //     const date = new Date(0);
-    //     date.setMilliseconds(__timer_ms);
-
-    //     const formated = date.toISOString().substring(11, 19);
-    //     props.timerElement.innerText = formated;
-    //   }, updateEveryMS);
-    // };
-
     const mainGrid = createElement("div", {
       class: "flex flex-col items-stretch justify-center gap-1"
     });
@@ -179,8 +200,11 @@ class RenderPageOnlineGame {
         rowItemElement.innerHTML = value === TileValues.EMPTY ? "" : createButtonContentFrom(value);
 
         const updateContent = () => {
+          // Si c'est la grille adversaire, on ne fait rien.
           if (this.user_index !== isForUser) return;
-
+          // Si la partie n'a pas commencé, on ne fait rien.
+          if (!this.game_ready) return;
+          
           const old_value = rowItemElement.dataset.value;
           const new_value = (old_value === TileValues.ZERO) ? TileValues.ONE : TileValues.ZERO;
 
@@ -192,7 +216,10 @@ class RenderPageOnlineGame {
 
         /** Permet de supprimer le contenu d'une tuile. */
         const removeContent = () => {
+          // Si c'est la grille adversaire, on ne fait rien.
           if (this.user_index !== isForUser) return;
+          // Si la partie n'a pas commencé, on ne fait rien.
+          if (!this.game_ready) return;
 
           rowItemElement.dataset.value = TileValues.EMPTY;
           rowItemElement.innerHTML = "";
@@ -240,7 +267,7 @@ class RenderPageOnlineGame {
       in_game: true
     }));
 
-    const timerElement = createElement("h2", { class: "font-medium text-xl" }, "00:00:00");
+    this.timer_element = createElement("h2", { class: "font-medium text-xl" }, "00:00:00");
 
     const actionQuitElement = createButtonComponent({
       type: "button",
@@ -258,7 +285,7 @@ class RenderPageOnlineGame {
     this.container = createElement("section", {
       class: "flex flex-col items-center justify-between gap-4 w-full min-h-screen h-full p-8"
     }, [
-      timerElement,
+      this.timer_element,
       createElement("div", {
         class: "flex gap-8"
       }, [
