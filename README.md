@@ -32,9 +32,9 @@ installer les dépendances et démarrer le serveur Takuzu vous même.
 
 ```bash
 git clone https://github.com/Vexcited/takuzu
-cd takuzu
+cd ./takuzu/sources
 
-# Utilisation de pnpm pour installer les dépendances (`npm i -g pnpm`)
+# Utilisation de pnpm pour installer les dépendances (`npm install --global pnpm`)
 pnpm install
 
 # Démarrage du serveur Takuzu.
