@@ -119,14 +119,14 @@ class RenderPageSolo {
           title: "Blitz",
           color: "primary",
           description: "Complétez autant de grilles que vous pouvez en moins de 2 minutes!",
-          highscore: "69",
+          highscore: "--",
           action: () => void 0
         }),
         createModeButtonComponent({
           title: "Gridz",
           color: "primary",
-          description: "Complétez un certain nombre de grilles le plus rapidement possbile!",
-          highscore: "23s",
+          description: "Complétez un certain nombre de grilles le plus rapidement possible!",
+          highscore: "--",
           action: () => void 0
         })
       ]),
