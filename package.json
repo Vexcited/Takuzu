@@ -1,0 +1,8 @@
+{
+  "name": "takuzu-monorepo",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "pnpm --filter takuzu start",
+    "dev": "pnpm --filter takuzu dev"
+  }
+}
