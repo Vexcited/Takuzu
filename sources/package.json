@@ -5,8 +5,8 @@
   "main": "./src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node ./src/index.js",
-    "dev": "nodemon ./src/index.js"
+    "start": "tailwindcss -i ./public/assets/styles/input.css -o ./public/assets/styles/output.css && node ./src/index.js",
+    "dev": "concurrently \"nodemon ./src/index.js\" \"tailwindcss -i ./public/assets/styles/input.css -o ./public/assets/styles/output.css --watch\""
   },
   "keywords": [
     "takuzu",
@@ -18,7 +18,9 @@
     "url": "https://github.com/Vexcited"
   },
   "contributors": [
-    { "name": "Mélissa LASPOUGEAS" }
+    {
+      "name": "Mélissa LASPOUGEAS"
+    }
   ],
   "license": "MIT",
   "dependencies": {
@@ -30,6 +32,8 @@
     "@types/express": "^4.17.17",
     "@types/express-ws": "^3.0.1",
     "@types/node": "^18.15.11",
-    "nodemon": "^2.0.22"
+    "concurrently": "^8.1.0",
+    "nodemon": "^2.0.22",
+    "tailwindcss": "^3.3.2"
   }
 }
