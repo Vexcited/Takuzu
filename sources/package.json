@@ -17,11 +17,6 @@
     "email": "mikkel@milescode.dev",
     "url": "https://github.com/Vexcited"
   },
-  "contributors": [
-    {
-      "name": "Mélissa LASPOUGEAS"
-    }
-  ],
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
